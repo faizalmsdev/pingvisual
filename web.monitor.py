@@ -10,7 +10,11 @@ from flask import Flask, render_template, jsonify
 import difflib
 import re
 import requests
+import os
 
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 class AIAnalyzer:
     def __init__(self, api_key):
         self.api_key = api_key
@@ -1175,8 +1179,7 @@ class WebChangeMonitor:
 app = Flask(__name__)
 
 # Initialize monitor with API key
-API_KEY = "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"
-monitor = WebChangeMonitor(api_key=API_KEY)
+monitor = WebChangeMonitor(api_key=os.environ["API_KEY"])
 
 @app.route('/')
 def index():
