@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Enhanced Web Change Monitor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'pulse-slow': 'pulse 2s infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'bounce-light': 'bounce 2s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 max-w-7xl">
+        <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden">
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-8 text-center">
+                <h1 class="text-4xl font-bold mb-3 flex items-center justify-center gap-3">
+                    🤖 AI-Enhanced Web Change Monitor
+                </h1>
+                <p class="text-xl opacity-90">Real-time website monitoring with AI-powered portfolio company detection</p>
+                <div class="mt-4 flex items-center justify-center gap-4 text-sm">
+                    <span class="bg-white/20 px-3 py-1 rounded-full">🔍 Change Detection</span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full">🤖 AI Analysis</span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full">💼 Portfolio Tracking</span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border-b border-blue-100">
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <button id="startBtn" class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full font-semibold uppercase tracking-wide hover:from-cyan-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Start AI Monitoring
+                    </button>
+                    <button id="stopBtn" class="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full font-semibold uppercase tracking-wide hover:from-red-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl" disabled>
+                        Stop Monitoring
+                    </button>
+                    <div class="flex items-center gap-3 text-lg font-semibold">
+                        <span id="statusIndicator" class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span id="statusText" class="text-gray-700">Inactive</span>
+                    </div>
+                    <div id="aiStatus" class="flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                        🤖 AI Ready
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-xl">
+                    <div class="text-2xl font-bold" id="totalChanges">0</div>
+                    <div class="text-sm opacity-90">Total Changes</div>
+                </div>
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl">
+                    <div class="text-2xl font-bold" id="companiesDetected">0</div>
+                    <div class="text-sm opacity-90">Companies Detected</div>
+                </div>
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-xl">
+                    <div class="text-2xl font-bold" id="aiAnalyses">0</div>
+                    <div class="text-sm opacity-90">AI Analyses</div>
+                </div>
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white p-4 rounded-xl">
+                    <div class="text-2xl font-bold" id="highConfidence">0</div>
+                    <div class="text-sm opacity-90">High Confidence</div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Changes Header -->
+                <div class="flex flex-wrap items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        📋 Detected Changes & AI Analysis
+                    </h2>
+                    <div id="changesCount" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full font-semibold">
+                        0 changes
+                    </div>
+                </div>
+
+                <!-- Changes List -->
+                <div id="changesList" class="max-h-[800px] overflow-y-auto space-y-6 pr-2">
+                    <!-- Default No Changes State -->
+                    <div class="text-center py-16 text-gray-500">
+                        <div class="text-6xl mb-4 opacity-30">🤖</div>
+                        <h3 class="text-xl font-semibold mb-2">No changes detected yet</h3>
+                        <p>Start monitoring to begin detecting changes and analyzing portfolio companies with AI</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Refresh Button -->
+    <button id="refreshBtn" class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 hover:rotate-180 transition-all duration-300 flex items-center justify-center text-xl">
+        🔄
+    </button>
+
+    <script>
+        let monitoringActive = false;
+        let refreshInterval;
+
+        // DOM elements
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const changesList = document.getElementById('changesList');
+        const changesCount = document.getElementById('changesCount');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const totalChanges = document.getElementById('totalChanges');
+        const companiesDetected = document.getElementById('companiesDetected');
+        const aiAnalyses = document.getElementById('aiAnalyses');
+        const highConfidence = document.getElementById('highConfidence');
+
+        // Event listeners
+        startBtn.addEventListener('click', startMonitoring);
+        stopBtn.addEventListener('click', stopMonitoring);
+        refreshBtn.addEventListener('click', fetchChanges);
+
+        // Start monitoring
+        async function startMonitoring() {
+            try {
+                const response = await fetch('/api/start');
+                const data = await response.json();
+                
+                if (data.status === 'started' || data.status === 'already_running') {
+                    monitoringActive = true;
+                    updateStatus(true);
+                    startAutoRefresh();
+                }
+            } catch (error) {
+                console.error('Error starting monitoring:', error);
+            }
+        }
+
+        // Stop monitoring
+        async function stopMonitoring() {
+            try {
+                const response = await fetch('/api/stop');
+                const data = await response.json();
+                
+                monitoringActive = false;
+                updateStatus(false);
+                stopAutoRefresh();
+            } catch (error) {
+                console.error('Error stopping monitoring:', error);
+            }
+        }
+
+        // Update status display
+        function updateStatus(active) {
+            if (active) {
+                statusIndicator.className = 'w-3 h-3 rounded-full bg-green-500 animate-pulse-slow';
+                statusText.textContent = 'AI Monitoring Active';
+                statusText.className = 'text-green-700 font-semibold';
+                startBtn.disabled = true;
+                startBtn.className = startBtn.className.replace('hover:scale-105', '') + ' opacity-50 cursor-not-allowed';
+                stopBtn.disabled = false;
+                stopBtn.className = stopBtn.className.replace('opacity-50 cursor-not-allowed', '');
+            } else {
+                statusIndicator.className = 'w-3 h-3 rounded-full bg-red-500';
+                statusText.textContent = 'Inactive';
+                statusText.className = 'text-gray-700 font-semibold';
+                startBtn.disabled = false;
+                startBtn.className = startBtn.className.replace('opacity-50 cursor-not-allowed', '');
+                stopBtn.disabled = true;
+                stopBtn.className = stopBtn.className + ' opacity-50 cursor-not-allowed';
+            }
+        }
+
+        // Update statistics
+        function updateStats(changes) {
+            totalChanges.textContent = changes.length;
+            
+            let companiesCount = 0;
+            let aiAnalysesCount = 0;
+            let highConfidenceCount = 0;
+            
+            changes.forEach(change => {
+                if (change.ai_analysis) {
+                    aiAnalysesCount++;
+                    if (change.ai_analysis.new_companies_detected) {
+                        companiesCount += change.ai_analysis.companies?.length || 0;
+                        highConfidenceCount += change.ai_analysis.companies?.filter(c => c.confidence === 'high').length || 0;
+                    }
+                }
+            });
+            
+            companiesDetected.textContent = companiesCount;
+            aiAnalyses.textContent = aiAnalysesCount;
+            highConfidence.textContent = highConfidenceCount;
+        }
+
+        // Fetch changes from server
+        async function fetchChanges() {
+            try {
+                const response = await fetch('/api/changes');
+                const data = await response.json();
+                
+                updateStatus(data.monitoring);
+                displayChanges(data.changes);
+                updateChangesCount(data.changes.length);
+                updateStats(data.changes);
+            } catch (error) {
+                console.error('Error fetching changes:', error);
+            }
+        }
+
+        // Display changes in the UI
+        function displayChanges(changes) {
+            if (changes.length === 0) {
+                changesList.innerHTML = `
+                    <div class="text-center py-16 text-gray-500">
+                        <div class="text-6xl mb-4 opacity-30">🤖</div>
+                        <h3 class="text-xl font-semibold mb-2">No changes detected yet</h3>
+                        <p>AI monitoring is active. Changes and portfolio company analysis will appear here when detected.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const changesHtml = changes.reverse().map(change => {
+                const time = new Date(change.timestamp).toLocaleString();
+                const typeConfig = getChangeTypeConfig(change.type);
+                
+                let detailsHtml = '';
+                let aiAnalysisHtml = '';
+
+                // Create AI analysis section if available
+                if (change.ai_analysis) {
+                    aiAnalysisHtml = createAIAnalysisHtml(change.ai_analysis);
+                }
+
+                if (change.type === 'text_change' && change.details) {
+                    detailsHtml = createTextChangeDetails(change);
+                } else if ((change.type === 'new_links' || change.type === 'removed_links') && change.details) {
+                    detailsHtml = createLinkChangeDetails(change.details);
+                } else if ((change.type === 'new_images' || change.type === 'removed_images' || change.type === 'modified_images') && change.details) {
+                    detailsHtml = createImageChangeDetails(change);
+                }
+
+                return `
+                    <div class="bg-white rounded-2xl p-6 border-l-4 ${typeConfig.borderColor} shadow-md hover:shadow-lg transition-all duration-300">
+                        <div class="flex flex-wrap items-center justify-between mb-4">
+                            <span class="px-3 py-1 ${typeConfig.bgColor} ${typeConfig.textColor} rounded-full text-sm font-semibold uppercase tracking-wide">
+                                ${typeConfig.icon} ${change.type.replace('_', ' ')}
+                            </span>
+                            <span class="text-sm text-gray-500 font-medium">${time}</span>
+                        </div>
+                        <div class="text-gray-800 font-semibold mb-3">${change.description}</div>
+                        
+                        ${aiAnalysisHtml}
+                        ${detailsHtml}
+                    </div>
+                `;
+            }).join('');
+
+            changesList.innerHTML = changesHtml;
+        }
+
+        // Create AI analysis HTML
+        function createAIAnalysisHtml(aiAnalysis) {
+            if (!aiAnalysis) return '';
+            
+            const hasCompanies = aiAnalysis.new_companies_detected && aiAnalysis.companies && aiAnalysis.companies.length > 0;
+            
+            let companiesHtml = '';
+            if (hasCompanies) {
+                companiesHtml = `
+                    <div class="mt-4 space-y-3">
+                        <h5 class="font-semibold text-gray-800 flex items-center gap-2">
+                            🏢 Companies Detected:
+                        </h5>
+                        ${aiAnalysis.companies.map(company => {
+                            const confidenceColor = company.confidence === 'high' ? 'text-green-600 bg-green-100' : 
+                                                   company.confidence === 'medium' ? 'text-yellow-600 bg-yellow-100' : 
+                                                   'text-red-600 bg-red-100';
+                            return `
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <h6 class="font-semibold text-lg text-gray-800">${company.name}</h6>
+                                        <span class="px-2 py-1 ${confidenceColor} rounded-full text-xs font-semibold uppercase">
+                                            ${company.confidence} confidence
+                                        </span>
+                                    </div>
+                                    ${company.sector ? `<div class="text-sm text-gray-600 mb-2"><strong>Sector:</strong> ${company.sector}</div>` : ''}
+                                    ${company.source ? `<div class="text-sm text-gray-600 mb-2"><strong>Source:</strong> ${company.source}</div>` : ''}
+                                    <div class="text-sm text-gray-700 bg-blue-50 p-3 rounded border-l-3 border-blue-400">
+                                        <strong>Evidence:</strong> ${company.evidence}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="mb-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-2xl">🤖</span>
+                        <h4 class="font-bold text-purple-800 text-lg">AI Analysis Results</h4>
+                        ${hasCompanies ? '<span class="ml-auto px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold animate-bounce-light">NEW COMPANIES DETECTED!</span>' : ''}
+                    </div>
+                    
+                    <div class="mb-3 p-3 bg-white rounded-lg border border-purple-100">
+                        <div class="text-sm text-gray-700">
+                            <strong>Summary:</strong> ${aiAnalysis.analysis_summary}
+                        </div>
+                    </div>
+                    
+                    ${companiesHtml}
+                    
+                    <div class="mt-3 text-xs text-gray-500 border-t border-purple-100 pt-2">
+                        🔬 Analysis powered by DeepSeek AI • Portfolio company detection
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get configuration for different change types
+        function getChangeTypeConfig(type) {
+            const configs = {
+                'text_change': {
+                    bgColor: 'bg-blue-100',
+                    textColor: 'text-blue-800',
+                    borderColor: 'border-blue-400',
+                    icon: '📝'
+                },
+                'new_links': {
+                    bgColor: 'bg-green-100',
+                    textColor: 'text-green-800',
+                    borderColor: 'border-green-400',
+                    icon: '🔗'
+                },
+                'removed_links': {
+                    bgColor: 'bg-red-100',
+                    textColor: 'text-red-800',
+                    borderColor: 'border-red-400',
+                    icon: '🚫'
+                },
+                'new_images': {
+                    bgColor: 'bg-purple-100',
+                    textColor: 'text-purple-800',
+                    borderColor: 'border-purple-400',
+                    icon: '🖼️'
+                },
+                'removed_images': {
+                    bgColor: 'bg-pink-100',
+                    textColor: 'text-pink-800',
+                    borderColor: 'border-pink-400',
+                    icon: '🗑️'
+                },
+                'modified_images': {
+                    bgColor: 'bg-yellow-100',
+                    textColor: 'text-yellow-800',
+                    borderColor: 'border-yellow-400',
+                    icon: '✏️'
+                }
+            };
+            return configs[type] || configs['text_change'];
+        }
+
+        // Create text change details HTML
+        function createTextChangeDetails(change) {
+            const addedCount = change.details.filter(d => d.type === 'added').length;
+            const removedCount = change.details.filter(d => d.type === 'removed').length;
+            
+            const changesList = change.details.map(detail => `
+                <div class="p-3 rounded-lg border-l-3 ${detail.type === 'added' ? 'bg-green-50 border-green-400 text-green-800' : 'bg-red-50 border-red-400 text-red-800'} mb-2">
+                    <div class="font-semibold text-xs uppercase tracking-wide mb-1">${detail.type}</div>
+                    <div class="text-sm">${detail.content}</div>
+                </div>
+            `).join('');
+            
+            const sideBySide = change.before_after ? `
+                <div class="grid md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-red-50 border border-red-200 rounded-lg overflow-hidden">
+                        <div class="bg-red-100 px-4 py-2 text-red-800 font-semibold text-sm">👈 Before (Removed)</div>
+                        <div class="p-4 max-h-60 overflow-y-auto text-sm whitespace-pre-wrap">${change.before_after.before}</div>
+                    </div>
+                    <div class="bg-green-50 border border-green-200 rounded-lg overflow-hidden">
+                        <div class="bg-green-100 px-4 py-2 text-green-800 font-semibold text-sm">👉 After (Added)</div>
+                        <div class="p-4 max-h-60 overflow-y-auto text-sm whitespace-pre-wrap">${change.before_after.after}</div>
+                    </div>
+                </div>
+            ` : '';
+            
+            return `
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <h4 class="font-semibold text-blue-800 text-sm mb-1">📊 Change Summary</h4>
+                        <p class="text-blue-600 text-sm">${addedCount} additions, ${removedCount} removals detected</p>
+                    </div>
+                    
+                    ${sideBySide}
+                    
+                    <div class="mt-4">
+                        <h4 class="font-semibold text-gray-800 mb-3">🔍 Detailed Changes:</h4>
+                        ${changesList}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create link change details HTML
+        function createLinkChangeDetails(links) {
+            return `
+                <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                    ${links.map(link => `
+                        <div class="bg-white border border-gray-200 rounded-lg p-3">
+                            <div class="font-semibold text-gray-800">${link.text || 'No text'}</div>
+                            <div class="text-sm text-blue-600 break-all">${link.url || link.href}</div>
+                            ${link.title ? `<div class="text-xs text-gray-500">Title: ${link.title}</div>` : ''}
+                            ${link.aria_label ? `<div class="text-xs text-gray-500">Aria Label: ${link.aria_label}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Create image change details HTML
+        function createImageChangeDetails(change) {
+            if (change.type === 'modified_images') {
+                return `
+                    <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                        ${change.details.map(img => `
+                            <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start gap-4">
+                                    ${img.src ? `<img src="${img.src}" alt="Modified image" class="w-16 h-16 object-cover rounded-lg border border-gray-300" onerror="this.style.display='none'">` : ''}
+                                    <div class="flex-1">
+                                        <div class="font-semibold text-gray-800 mb-2">Image: ${img.src || img.unique_id}</div>
+                                        <div class="space-y-2">
+                                            ${img.changes.map(change => `
+                                                <div class="text-sm border-l-2 border-yellow-400 pl-3">
+                                                    <div class="font-medium text-yellow-800">${change.attribute} changed:</div>
+                                                    <div class="text-red-600">- ${change.old_value || '(empty)'}</div>
+                                                    <div class="text-green-600">+ ${change.new_value || '(empty)'}</div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                        ${change.details.map(img => `
+                            <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start gap-4">
+                                    ${img.src ? `<img src="${img.src}" alt="${img.alt || 'Image'}" class="w-16 h-16 object-cover rounded-lg border border-gray-300" onerror="this.style.display='none'">` : ''}
+                                    <div class="flex-1">
+                                        <div class="font-semibold text-gray-800 mb-1">${img.src || 'Unknown source'}</div>
+                                        ${img.alt ? `<div class="text-sm text-gray-600 mb-1"><strong>Alt:</strong> ${img.alt}</div>` : ''}
+                                        ${img.title ? `<div class="text-sm text-gray-600 mb-1"><strong>Title:</strong> ${img.title}</div>` : ''}
+                                        ${img.data_id ? `<div class="text-sm text-gray-600 mb-1"><strong>Data ID:</strong> ${img.data_id}</div>` : ''}
+                                        ${img.context ? `<div class="text-xs text-gray-500 mt-2 p-2 bg-gray-100 rounded">${img.context}</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // Update changes count
+        function updateChangesCount(count) {
+            changesCount.textContent = `${count} change${count !== 1 ? 's' : ''}`;
+        }
+
+        // Start auto-refresh
+        function startAutoRefresh() {
+            refreshInterval = setInterval(fetchChanges, 60000); // Refresh every 1minute
+        }
+
+        // Stop auto-refresh
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        }
+
+        // Initial load
+        // fetchChanges();
+    </script>
+</body>
+</html>
