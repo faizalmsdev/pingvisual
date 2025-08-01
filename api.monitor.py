@@ -1,13 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
+from flask_cors import CORS
 import json
 import os
 import uuid
 import threading
 import time
+import hashlib
+import secrets
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from typing import Dict, List, Optional
 import logging
+from functools import wraps
 
 # Import the existing WebChangeMonitor class
 from webmonitor import WebChangeMonitor, AIAnalyzer
@@ -17,8 +21,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @dataclass
+class User:
+    user_id: str
+    email: str
+    password_hash: str
+    created_at: str
+    last_login: Optional[str] = None
+    is_active: bool = True
+
+@dataclass
 class MonitoringJob:
     job_id: str
+    user_id: str  # Added user_id to associate jobs with users
     name: str
     url: str
     check_interval_minutes: int
@@ -28,6 +42,88 @@ class MonitoringJob:
     total_checks: int = 0
     changes_detected: int = 0
     error_message: Optional[str] = None
+
+class UserManager:
+    def __init__(self, users_file="users.json"):
+        self.users_file = users_file
+        self.users: Dict[str, User] = {}
+        self.load_users()
+    
+    def load_users(self):
+        """Load users from JSON file"""
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, 'r') as f:
+                    users_data = json.load(f)
+                    for user_data in users_data:
+                        user = User(**user_data)
+                        self.users[user.user_id] = user
+                logger.info(f"Loaded {len(self.users)} users from {self.users_file}")
+        except Exception as e:
+            logger.error(f"Error loading users: {e}")
+    
+    def save_users(self):
+        """Save users to JSON file"""
+        try:
+            users_data = [asdict(user) for user in self.users.values()]
+            with open(self.users_file, 'w') as f:
+                json.dump(users_data, f, indent=2)
+            logger.info(f"Saved {len(self.users)} users to {self.users_file}")
+        except Exception as e:
+            logger.error(f"Error saving users: {e}")
+    
+    def hash_password(self, password: str) -> str:
+        """Hash password using SHA-256"""
+        return hashlib.sha256(password.encode()).hexdigest()
+    
+    def verify_password(self, password: str, password_hash: str) -> bool:
+        """Verify password against hash"""
+        return hashlib.sha256(password.encode()).hexdigest() == password_hash
+    
+    def email_exists(self, email: str) -> bool:
+        """Check if email already exists"""
+        return any(user.email == email for user in self.users.values())
+    
+    def create_user(self, email: str, password: str) -> Optional[str]:
+        """Create a new user"""
+        if self.email_exists(email):
+            return None
+        
+        user_id = str(uuid.uuid4())
+        password_hash = self.hash_password(password)
+        
+        user = User(
+            user_id=user_id,
+            email=email,
+            password_hash=password_hash,
+            created_at=datetime.now().isoformat()
+        )
+        
+        self.users[user_id] = user
+        self.save_users()
+        logger.info(f"Created user {user_id}: {email}")
+        return user_id
+    
+    def authenticate_user(self, email: str, password: str) -> Optional[User]:
+        """Authenticate user with email and password"""
+        for user in self.users.values():
+            if user.email == email and user.is_active:
+                if self.verify_password(password, user.password_hash):
+                    user.last_login = datetime.now().isoformat()
+                    self.save_users()
+                    return user
+        return None
+    
+    def get_user(self, user_id: str) -> Optional[User]:
+        """Get user by ID"""
+        return self.users.get(user_id)
+    
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        """Get user by email"""
+        for user in self.users.values():
+            if user.email == email:
+                return user
+        return None
 
 class JobManager:
     def __init__(self, jobs_file="jobs.json", results_dir="results"):
@@ -51,6 +147,9 @@ class JobManager:
                 with open(self.jobs_file, 'r') as f:
                     jobs_data = json.load(f)
                     for job_data in jobs_data:
+                        # Handle jobs without user_id (for backward compatibility)
+                        if 'user_id' not in job_data:
+                            job_data['user_id'] = 'legacy'
                         job = MonitoringJob(**job_data)
                         self.jobs[job.job_id] = job
                 logger.info(f"Loaded {len(self.jobs)} jobs from {self.jobs_file}")
@@ -67,11 +166,12 @@ class JobManager:
         except Exception as e:
             logger.error(f"Error saving jobs: {e}")
     
-    def create_job(self, name: str, url: str, check_interval_minutes: int) -> str:
-        """Create a new monitoring job"""
+    def create_job(self, user_id: str, name: str, url: str, check_interval_minutes: int) -> str:
+        """Create a new monitoring job for a specific user"""
         job_id = str(uuid.uuid4())
         job = MonitoringJob(
             job_id=job_id,
+            user_id=user_id,
             name=name,
             url=url,
             check_interval_minutes=check_interval_minutes,
@@ -80,8 +180,17 @@ class JobManager:
         )
         self.jobs[job_id] = job
         self.save_jobs()
-        logger.info(f"Created job {job_id}: {name}")
+        logger.info(f"Created job {job_id}: {name} for user {user_id}")
         return job_id
+    
+    def get_user_jobs(self, user_id: str) -> List[MonitoringJob]:
+        """Get all jobs for a specific user"""
+        return [job for job in self.jobs.values() if job.user_id == user_id]
+    
+    def user_owns_job(self, user_id: str, job_id: str) -> bool:
+        """Check if user owns the specified job"""
+        job = self.jobs.get(job_id)
+        return job is not None and job.user_id == user_id
     
     def start_job(self, job_id: str, api_key: Optional[str] = None) -> bool:
         """Start monitoring for a specific job"""
@@ -366,12 +475,145 @@ class JobManager:
         
         return stats
 
-# Initialize Flask app and job manager
+# Initialize Flask app, user manager, and job manager
+
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)  # Generate a secure secret key
+# Enable CORS for all routes and origins
+CORS(app, supports_credentials=True)
+user_manager = UserManager()
 job_manager = JobManager()
 API_KEY = os.getenv('API_KEY')  # Load from environment
 
+# Authentication decorator
+def require_auth(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({'error': 'Authentication required'}), 401
+        
+        user = user_manager.get_user(session['user_id'])
+        if not user or not user.is_active:
+            session.pop('user_id', None)
+            return jsonify({'error': 'Invalid session'}), 401
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Authentication routes
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """Register a new user"""
+    try:
+        data = request.get_json()
+        
+        if not data or not all(k in data for k in ['email', 'password']):
+            return jsonify({'error': 'Email and password are required'}), 400
+        
+        email = data['email'].strip().lower()
+        password = data['password']
+        
+        # Basic validation
+        if len(password) < 6:
+            return jsonify({'error': 'Password must be at least 6 characters long'}), 400
+        
+        if '@' not in email or '.' not in email:
+            return jsonify({'error': 'Invalid email format'}), 400
+        
+        # Create user
+        user_id = user_manager.create_user(email, password)
+        if not user_id:
+            return jsonify({'error': 'Email already exists'}), 409
+        
+        # Auto-login after registration
+        session['user_id'] = user_id
+        user = user_manager.get_user(user_id)
+        
+        return jsonify({
+            'success': True,
+            'message': 'User registered successfully',
+            'user': {
+                'user_id': user.user_id,
+                'email': user.email,
+                'created_at': user.created_at
+            }
+        }), 201
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """Login user"""
+    try:
+        data = request.get_json()
+        
+        if not data or not all(k in data for k in ['email', 'password']):
+            return jsonify({'error': 'Email and password are required'}), 400
+        
+        email = data['email'].strip().lower()
+        password = data['password']
+        
+        # Authenticate user
+        user = user_manager.authenticate_user(email, password)
+        if not user:
+            return jsonify({'error': 'Invalid email or password'}), 401
+        
+        # Set session
+        session['user_id'] = user.user_id
+        
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'user': {
+                'user_id': user.user_id,
+                'email': user.email,
+                'last_login': user.last_login
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/auth/logout', methods=['POST'])
+@require_auth
+def logout():
+    """Logout user"""
+    try:
+        session.pop('user_id', None)
+        return jsonify({
+            'success': True,
+            'message': 'Logout successful'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/auth/profile', methods=['GET'])
+@require_auth
+def get_profile():
+    """Get user profile"""
+    try:
+        user = user_manager.get_user(session['user_id'])
+        user_jobs = job_manager.get_user_jobs(user.user_id)
+        
+        return jsonify({
+            'success': True,
+            'user': {
+                'user_id': user.user_id,
+                'email': user.email,
+                'created_at': user.created_at,
+                'last_login': user.last_login,
+                'total_jobs': len(user_jobs),
+                'running_jobs': len([j for j in user_jobs if j.status == 'running']),
+                'total_changes': sum(j.changes_detected for j in user_jobs)
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Job management routes (now with authentication)
 @app.route('/api/jobs', methods=['POST'])
+@require_auth
 def create_job():
     """Create a new monitoring job"""
     try:
@@ -390,8 +632,8 @@ def create_job():
         if check_interval < 1:
             return jsonify({'error': 'check_interval_minutes must be at least 1'}), 400
         
-        # Create job
-        job_id = job_manager.create_job(name, url, check_interval)
+        # Create job for authenticated user
+        job_id = job_manager.create_job(session['user_id'], name, url, check_interval)
         job = job_manager.get_job(job_id)
         
         return jsonify({
@@ -405,10 +647,11 @@ def create_job():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs', methods=['GET'])
-def get_all_jobs():
-    """Get all monitoring jobs"""
+@require_auth
+def get_user_jobs():
+    """Get all monitoring jobs for authenticated user"""
     try:
-        jobs = job_manager.get_all_jobs()
+        jobs = job_manager.get_user_jobs(session['user_id'])
         return jsonify({
             'success': True,
             'jobs': [asdict(job) for job in jobs],
@@ -418,13 +661,14 @@ def get_all_jobs():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>', methods=['GET'])
+@require_auth
 def get_job(job_id):
     """Get specific job details"""
     try:
-        job = job_manager.get_job(job_id)
-        if not job:
-            return jsonify({'error': 'Job not found'}), 404
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
         
+        job = job_manager.get_job(job_id)
         return jsonify({
             'success': True,
             'job': asdict(job)
@@ -433,16 +677,20 @@ def get_job(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>/start', methods=['POST'])
+@require_auth
 def start_job(job_id):
     """Start monitoring for a specific job"""
     try:
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
+        
         # Get API key from request or use default
         data = request.get_json() or {}
         api_key = data.get('api_key', API_KEY)
         
         success = job_manager.start_job(job_id, api_key)
         if not success:
-            return jsonify({'error': 'Failed to start job or job not found'}), 400
+            return jsonify({'error': 'Failed to start job'}), 400
         
         job = job_manager.get_job(job_id)
         return jsonify({
@@ -454,12 +702,16 @@ def start_job(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>/stop', methods=['POST'])
+@require_auth
 def stop_job(job_id):
     """Stop monitoring for a specific job"""
     try:
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
+        
         success = job_manager.stop_job(job_id)
         if not success:
-            return jsonify({'error': 'Job not found'}), 404
+            return jsonify({'error': 'Failed to stop job'}), 400
         
         job = job_manager.get_job(job_id)
         return jsonify({
@@ -471,9 +723,13 @@ def stop_job(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>/pause', methods=['POST'])
+@require_auth
 def pause_job(job_id):
     """Pause monitoring for a specific job"""
     try:
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
+        
         success = job_manager.pause_job(job_id)
         if not success:
             return jsonify({'error': 'Job not found or not running'}), 400
@@ -488,13 +744,14 @@ def pause_job(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>', methods=['DELETE'])
+@require_auth
 def delete_job(job_id):
     """Delete a job and its results"""
     try:
-        job = job_manager.get_job(job_id)
-        if not job:
-            return jsonify({'error': 'Job not found'}), 404
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
         
+        job = job_manager.get_job(job_id)
         job_name = job.name
         success = job_manager.delete_job(job_id)
         
@@ -506,12 +763,14 @@ def delete_job(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>/results', methods=['GET'])
+@require_auth
 def get_job_results(job_id):
     """Get results for a specific job"""
     try:
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
+        
         job = job_manager.get_job(job_id)
-        if not job:
-            return jsonify({'error': 'Job not found'}), 404
         
         # Get limit from query parameters
         limit = request.args.get('limit', 50, type=int)
@@ -529,13 +788,14 @@ def get_job_results(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/jobs/<job_id>/stats', methods=['GET'])
+@require_auth
 def get_job_stats(job_id):
     """Get statistics for a specific job"""
     try:
-        job = job_manager.get_job(job_id)
-        if not job:
-            return jsonify({'error': 'Job not found'}), 404
+        if not job_manager.user_owns_job(session['user_id'], job_id):
+            return jsonify({'error': 'Job not found or access denied'}), 404
         
+        job = job_manager.get_job(job_id)
         stats = job_manager.get_job_stats(job_id)
         
         return jsonify({
@@ -548,17 +808,19 @@ def get_job_stats(job_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/status', methods=['GET'])
-def get_system_status():
-    """Get overall system status"""
+@require_auth
+def get_user_status():
+    """Get user-specific system status"""
     try:
-        jobs = job_manager.get_all_jobs()
+        user_jobs = job_manager.get_user_jobs(session['user_id'])
         
         status = {
-            'total_jobs': len(jobs),
-            'running_jobs': len([j for j in jobs if j.status == 'running']),
-            'paused_jobs': len([j for j in jobs if j.status == 'paused']),
-            'stopped_jobs': len([j for j in jobs if j.status == 'stopped']),
-            'error_jobs': len([j for j in jobs if j.status == 'error']),
+            'total_jobs': len(user_jobs),
+            'running_jobs': len([j for j in user_jobs if j.status == 'running']),
+            'paused_jobs': len([j for j in user_jobs if j.status == 'paused']),
+            'stopped_jobs': len([j for j in user_jobs if j.status == 'stopped']),
+            'error_jobs': len([j for j in user_jobs if j.status == 'error']),
+            'total_changes_detected': sum(j.changes_detected for j in user_jobs),
             'ai_enabled': API_KEY is not None,
             'system_time': datetime.now().isoformat()
         }
@@ -576,22 +838,61 @@ def health_check():
     return jsonify({
         'success': True,
         'message': 'Web Change Monitor API is running',
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now().isoformat(),
+        'authentication': 'enabled',
+        'total_users': len(user_manager.users),
+        'total_jobs': len(job_manager.jobs)
     })
 
+# Admin routes (optional - for system monitoring)
+@app.route('/api/admin/stats', methods=['GET'])
+def get_admin_stats():
+    """Get overall system statistics (no auth required for basic stats)"""
+    try:
+        all_jobs = job_manager.get_all_jobs()
+        
+        stats = {
+            'system': {
+                'total_users': len(user_manager.users),
+                'active_users': len([u for u in user_manager.users.values() if u.is_active]),
+                'total_jobs': len(all_jobs),
+                'running_jobs': len([j for j in all_jobs if j.status == 'running']),
+                'total_changes': sum(j.changes_detected for j in all_jobs),
+            },
+            'ai_enabled': API_KEY is not None,
+            'uptime': datetime.now().isoformat()
+        }
+        
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
-    print("Web Change Monitor API")
-    print("=====================")
+    print("🔐 Web Change Monitor API with Authentication")
+    print("=============================================")
     print("🔧 Features:")
+    print("  - User registration & authentication")
+    print("  - SHA-256 password hashing")
+    print("  - Session-based authentication")
+    print("  - User-specific job isolation")
     print("  - Create monitoring jobs with custom intervals")
     print("  - Start/stop/pause job management")
     print("  - AI-powered change analysis")
     print("  - Results storage and retrieval")
     print("  - RESTful API for all operations")
     print("")
-    print("📡 API Endpoints:")
+    print("🔐 Authentication Endpoints:")
+    print("  POST   /api/auth/register        - Register new user")
+    print("  POST   /api/auth/login           - Login user")
+    print("  POST   /api/auth/logout          - Logout user")
+    print("  GET    /api/auth/profile         - Get user profile")
+    print("")
+    print("📡 Job Management Endpoints (Auth Required):")
     print("  POST   /api/jobs                 - Create new job")
-    print("  GET    /api/jobs                 - Get all jobs")
+    print("  GET    /api/jobs                 - Get user's jobs")
     print("  GET    /api/jobs/<id>            - Get job details")
     print("  POST   /api/jobs/<id>/start      - Start job")
     print("  POST   /api/jobs/<id>/stop       - Stop job")
@@ -599,17 +900,39 @@ if __name__ == '__main__':
     print("  DELETE /api/jobs/<id>            - Delete job")
     print("  GET    /api/jobs/<id>/results    - Get job results")
     print("  GET    /api/jobs/<id>/stats      - Get job statistics")
-    print("  GET    /api/status               - System status")
+    print("  GET    /api/status               - User status")
+    print("")
+    print("🌐 Public Endpoints:")
     print("  GET    /api/health               - Health check")
+    print("  GET    /api/admin/stats          - System statistics")
+    print("")
+    print("🔑 Usage:")
+    print("  1. Register: curl -X POST http://localhost:5000/api/auth/register \\")
+    print("                    -H 'Content-Type: application/json' \\")
+    print("                    -d '{\"email\":\"user@example.com\",\"password\":\"password123\"}'")
+    print("")
+    print("  2. Login: curl -X POST http://localhost:5000/api/auth/login \\")
+    print("                 -H 'Content-Type: application/json' \\")
+    print("                 -d '{\"email\":\"user@example.com\",\"password\":\"password123\"}' \\")
+    print("                 -c cookies.txt")
+    print("")
+    print("  3. Create Job: curl -X POST http://localhost:5000/api/jobs \\")
+    print("                      -H 'Content-Type: application/json' \\")
+    print("                      -b cookies.txt \\")
+    print("                      -d '{\"name\":\"My Website\",\"url\":\"https://example.com\",\"check_interval_minutes\":5}'")
     print("")
     print(f"🤖 AI Analysis: {'Enabled' if API_KEY else 'Disabled (set API_KEY environment variable)'}")
+    print(f"💾 Data Storage:")
+    print(f"   - Users: users.json")
+    print(f"   - Jobs: jobs.json") 
+    print(f"   - Results: results/ directory")
     print("")
-    print("🚀 Starting server on http://localhost:8000")
-    print("   Test with: curl http://localhost:8000/api/health")
+    print("🚀 Starting server on http://localhost:5000")
+    print("   Test with: curl http://localhost:5000/api/health")
     print("   Press Ctrl+C to stop")
     
     try:
-        app.run(debug=True, host='0.0.0.0', port=8000, threaded=True)
+        app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
     except KeyboardInterrupt:
         print("\n🛑 Shutting down...")
         # Stop all running jobs
@@ -617,3 +940,7 @@ if __name__ == '__main__':
             if job_manager.jobs[job_id].status == 'running':
                 job_manager.stop_job(job_id)
         print("✅ All jobs stopped. Goodbye!")
+    except Exception as e:
+        logger.error(f"Error starting server: {e}")
+        print(f"❌ Server failed to start: {e}")
+        print("💡 Make sure port 5000 is available and webmonitor.py exists")

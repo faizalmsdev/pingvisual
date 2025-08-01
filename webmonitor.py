@@ -1232,11 +1232,11 @@ if __name__ == '__main__':
     print("- 🤖 AI-powered portfolio company detection")
     print("- DeepSeek AI integration for investment analysis")
     print("Starting Flask server...")
-    print("Visit http://localhost:8000 to view the dashboard")
+    print("Visit http://localhost:5000 to view the dashboard")
     print("Press Ctrl+C to stop")
     
     try:
-        app.run(debug=True, host='0.0.0.0', port=8000, threaded=True)
+        app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
     except KeyboardInterrupt:
         print("\nShutting down...")
         monitor.stop_monitoring()

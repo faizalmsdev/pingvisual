@@ -1,6 +1,7 @@
 [
   {
     "job_id": "01d2fe1c-141f-4d37-b976-2502fa18e15b",
+    "user_id": "legacy",
     "name": "Caspian Equity Portfolio",
     "url": "http://127.0.0.1:3001/caspianequity.html",
     "check_interval_minutes": 1,
