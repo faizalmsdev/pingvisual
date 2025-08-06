@@ -189,11 +189,33 @@ class AIAnalyzer:
                 if img_context:
                     context_parts.append(" | ".join(img_context))
         
+        elif change_data['type'] == 'removed_images' and change_data.get('details'):
+            context_parts.append("=== REMOVED IMAGES DETECTED ===")
+            for img in change_data['details']:
+                img_context = []
+                if img.get('alt'):
+                    img_context.append(f"Alt text: {img['alt']}")
+                if img.get('title'):
+                    img_context.append(f"Title: {img['title']}")
+                if img.get('src'):
+                    img_context.append(f"Image URL: {img['src']}")
+                if img.get('context'):
+                    img_context.append(f"Context: {img['context']}")
+                if img.get('potential_company'):
+                    img_context.append(f"Potential Company: {img['potential_company']}")
+                
+                if img_context:
+                    context_parts.append(" | ".join(img_context))
+        
         elif change_data['type'] == 'text_change' and change_data.get('details'):
             context_parts.append("=== TEXT CHANGES DETECTED ===")
             for detail in change_data['details']:
                 if detail['type'] == 'added':
                     context_parts.append(f"New text added: {detail['content']}")
+                elif detail['type'] == 'removed':
+                    context_parts.append(f"Text removed: {detail['content']}")
+                    if detail.get('potential_companies'):
+                        context_parts.append(f"Potential companies in removed text: {', '.join(detail['potential_companies'])}")
         
         elif change_data['type'] == 'new_links' and change_data.get('details'):
             context_parts.append("=== NEW LINKS DETECTED ===")
@@ -208,6 +230,34 @@ class AIAnalyzer:
                 
                 if link_context:
                     context_parts.append(" | ".join(link_context))
+        
+        elif change_data['type'] == 'removed_links' and change_data.get('details'):
+            context_parts.append("=== REMOVED LINKS DETECTED ===")
+            for link in change_data['details']:
+                link_context = []
+                if link.get('text'):
+                    link_context.append(f"Link text: {link['text']}")
+                if link.get('url'):
+                    link_context.append(f"URL: {link['url']}")
+                if link.get('title'):
+                    link_context.append(f"Title: {link['title']}")
+                if link.get('potential_company'):
+                    link_context.append(f"Potential Company: {link['potential_company']}")
+                
+                if link_context:
+                    context_parts.append(" | ".join(link_context))
+        
+        elif change_data['type'] == 'removed_portfolio_companies' and change_data.get('details'):
+            context_parts.append("=== REMOVED PORTFOLIO COMPANIES DETECTED ===")
+            for company in change_data['details']:
+                company_context = []
+                if company.get('name'):
+                    company_context.append(f"Company name: {company['name']}")
+                if company.get('context'):
+                    company_context.append(f"Context: {company['context']}")
+                
+                if company_context:
+                    context_parts.append(" | ".join(company_context))
         
         return "\n".join(context_parts) if context_parts else None
 
@@ -280,13 +330,15 @@ class WebChangeMonitor:
     def filter_navigation_changes(self, text_changes):
         """Filter out navigation-related text changes"""
         filtered_changes = []
+        navigation_filtered_count = 0
         
         for change in text_changes:
             content = change.get('content', '')
             
             # Skip if this looks like navigation content
             if self.is_navigation_content(content):
-                print(f"🔍 Filtered navigation content: {content[:100]}...")
+                navigation_filtered_count += 1
+                print(f"🔍 Filtered navigation content ({change['type']}): {content[:100]}...")
                 continue
             
             # Skip very short changes that are likely navigation
@@ -301,10 +353,14 @@ class WebChangeMonitor:
             ])
             
             if len(words) > 0 and (nav_word_count / len(words)) > 0.4:
-                print(f"🔍 Filtered high nav-keyword content: {content[:100]}...")
+                navigation_filtered_count += 1
+                print(f"🔍 Filtered high nav-keyword content ({change['type']}): {content[:100]}...")
                 continue
             
             filtered_changes.append(change)
+        
+        if navigation_filtered_count > 0:
+            print(f"🔍 Total navigation content filtered: {navigation_filtered_count} items")
         
         return filtered_changes
         
@@ -587,13 +643,215 @@ class WebChangeMonitor:
                 
                 changes.append(change_data)
         
-        # Similar filtering for removed and modified images...
-        # (Rest of the image comparison logic with navigation filtering)
+        # Find removed images - ENHANCED with detailed reporting
+        removed_image_keys = set(old_images_dict.keys()) - set(new_images_dict.keys())
+        if removed_image_keys:
+            removed_image_details = []
+            potential_removed_companies = []
+            
+            for key in removed_image_keys:
+                img = old_images_dict[key]
+                
+                # Skip if this appears to be a navigation-related image
+                if (img.get('alt') and self.is_navigation_content(img['alt'])) or \
+                   (img.get('title') and self.is_navigation_content(img['title'])):
+                    print(f"🔍 Filtered removed navigation image: {img.get('alt', img.get('src', 'Unknown'))}")
+                    continue
+                
+                context_info = []
+                
+                if img['alt']:
+                    context_info.append(f"Alt: '{img['alt']}'")
+                if img['title']:
+                    context_info.append(f"Title: '{img['title']}'")
+                if img['data-id']:
+                    context_info.append(f"Data-ID: '{img['data-id']}'")
+                if img['aria-label']:
+                    context_info.append(f"Aria-Label: '{img['aria-label']}'")
+                if img['data-caption']:
+                    context_info.append(f"Caption: '{img['data-caption']}'")
+                
+                context_str = " | ".join(context_info) if context_info else "No additional context"
+                
+                # Extract potential company name from image
+                potential_company = self.extract_company_from_image(img)
+                if potential_company:
+                    potential_removed_companies.append(potential_company)
+                
+                removed_image_details.append({
+                    'src': img['src'],
+                    'alt': img['alt'],
+                    'title': img['title'],
+                    'data_id': img['data-id'],
+                    'context': context_str,
+                    'potential_company': potential_company,
+                    'all_attributes': img
+                })
+            
+            if removed_image_details:
+                # Create enhanced description showing what was removed
+                description_parts = [f'{len(removed_image_details)} images removed']
+                
+                if potential_removed_companies:
+                    company_names = ', '.join(potential_removed_companies)
+                    description_parts.append(f"Potential companies: {company_names}")
+                
+                # Show some examples of what was removed
+                example_alts = [img['alt'] for img in removed_image_details[:3] if img['alt']]
+                if example_alts:
+                    description_parts.append(f"Examples: {', '.join(example_alts)}")
+                
+                change_data = {
+                    'type': 'removed_images',
+                    'description': ' | '.join(description_parts),
+                    'details': removed_image_details,
+                    'potential_companies': potential_removed_companies,
+                    'timestamp': datetime.now().isoformat()
+                }
+                
+                # Add AI analysis for removed images
+                if self.ai_analyzer:
+                    print("🤖 Running AI analysis on removed images...")
+                    ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
+                    if ai_analysis:
+                        change_data['ai_analysis'] = ai_analysis
+                        print(f"AI Analysis completed: {ai_analysis.get('analysis_summary', 'No summary')}")
+                
+                changes.append(change_data)
+                print(f"🗑️ REMOVED IMAGES: {change_data['description']}")
+        
+        # Find modified images (same source but different attributes)
+        common_keys = set(old_images_dict.keys()) & set(new_images_dict.keys())
+        modified_images = []
+        
+        for key in common_keys:
+            old_img = old_images_dict[key]
+            new_img = new_images_dict[key]
+            
+            # Skip navigation images
+            if (old_img.get('alt') and self.is_navigation_content(old_img['alt'])) or \
+               (new_img.get('alt') and self.is_navigation_content(new_img['alt'])):
+                continue
+            
+            # Check for attribute changes
+            attribute_changes = []
+            attributes_to_check = ['alt', 'title', 'data-id', 'class', 'id', 'aria-label', 'data-caption']
+            
+            for attr in attributes_to_check:
+                old_val = old_img.get(attr, '')
+                new_val = new_img.get(attr, '')
+                
+                if old_val != new_val:
+                    attribute_changes.append({
+                        'attribute': attr,
+                        'old_value': old_val,
+                        'new_value': new_val
+                    })
+            
+            if attribute_changes:
+                modified_images.append({
+                    'src': new_img['src'],
+                    'unique_id': key,
+                    'changes': attribute_changes,
+                    'old_context': self.build_image_context(old_img),
+                    'new_context': self.build_image_context(new_img)
+                })
+        
+        if modified_images:
+            # Enhanced description for modified images
+            description_parts = [f'{len(modified_images)} images modified']
+            
+            # Show what types of changes occurred
+            change_types = set()
+            for img in modified_images:
+                for change in img['changes']:
+                    change_types.add(change['attribute'])
+            
+            if change_types:
+                description_parts.append(f"Changed attributes: {', '.join(change_types)}")
+            
+            changes.append({
+                'type': 'modified_images',
+                'description': ' | '.join(description_parts),
+                'details': modified_images,
+                'timestamp': datetime.now().isoformat()
+            })
         
         return changes
     
+    def extract_company_from_image(self, img):
+        """Extract potential company name from image attributes or filename"""
+        potential_company = None
+        
+        # Try to extract from alt text
+        if img.get('alt'):
+            alt_text = img['alt'].strip()
+            if alt_text and len(alt_text) > 2 and not self.is_navigation_content(alt_text):
+                # Check if alt text looks like a company name
+                if alt_text.isupper() or alt_text.istitle():
+                    potential_company = alt_text
+        
+        # Try to extract from filename
+        if not potential_company and img.get('src'):
+            import os
+            filename = os.path.basename(img['src'])
+            company_from_filename = os.path.splitext(filename)[0]
+            
+            if (company_from_filename and 
+                len(company_from_filename) > 2 and 
+                company_from_filename.replace('-', '').replace('_', '').isalnum() and
+                company_from_filename.lower() not in ['image', 'logo', 'photo', 'pic', 'banner']):
+                potential_company = company_from_filename.upper()
+        
+        # Try to extract from title
+        if not potential_company and img.get('title'):
+            title_text = img['title'].strip()
+            if title_text and len(title_text) > 2 and not self.is_navigation_content(title_text):
+                if title_text.isupper() or title_text.istitle():
+                    potential_company = title_text
+        
+        return potential_company
+    
+    def extract_company_from_link(self, link):
+        """Extract potential company name from link text or URL"""
+        potential_company = None
+        
+        # Try to extract from link text
+        if link.get('text'):
+            link_text = link['text'].strip()
+            if link_text and len(link_text) > 2 and not self.is_navigation_content(link_text):
+                # Check if link text looks like a company name
+                if link_text.isupper() or link_text.istitle():
+                    # Avoid common button/action words
+                    action_words = ['visit', 'site', 'learn', 'more', 'read', 'view', 'click', 'here']
+                    if not any(word in link_text.lower() for word in action_words):
+                        potential_company = link_text
+        
+        # Try to extract from URL
+        if not potential_company and link.get('href'):
+            url = link['href']
+            # Extract domain or path segments that might contain company names
+            import re
+            # Look for patterns like /company/CompanyName or domain names
+            url_parts = re.findall(r'/([A-Za-z][A-Za-z0-9]+)', url)
+            for part in url_parts:
+                if (len(part) > 2 and 
+                    part.lower() not in ['www', 'com', 'org', 'net', 'portfolio', 'company', 'about'] and
+                    not part.isdigit()):
+                    potential_company = part.upper()
+                    break
+        
+        # Try to extract from title
+        if not potential_company and link.get('title'):
+            title_text = link['title'].strip()
+            if title_text and len(title_text) > 2 and not self.is_navigation_content(title_text):
+                if title_text.isupper() or title_text.istitle():
+                    potential_company = title_text
+        
+        return potential_company
+    
     def compare_content(self, old_content, new_content):
-        """Compare two content snapshots and find differences"""
+        """Compare two content snapshots and find differences - FIXED VERSION"""
         if not old_content or not new_content:
             return []
             
@@ -678,14 +936,43 @@ class WebChangeMonitor:
             text_changes = self.filter_navigation_changes(text_changes)
             
             if text_changes:
+                # Create enhanced description with more details about what changed
+                added_count = len([c for c in text_changes if c["type"] == "added"])
+                removed_count = len([c for c in text_changes if c["type"] == "removed"])
+                
+                description_parts = [f'Text content changed - {added_count} additions, {removed_count} removals']
+                
+                # Show potential company-related changes
+                company_related_changes = [c for c in text_changes if c.get("is_company_related")]
+                if company_related_changes:
+                    all_companies = []
+                    for change in company_related_changes:
+                        all_companies.extend(change.get("potential_companies", []))
+                    
+                    if all_companies:
+                        unique_companies = list(set(all_companies))
+                        description_parts.append(f"Potential companies involved: {', '.join(unique_companies[:5])}")  # Limit to first 5
+                
+                # Show examples of changes
+                if added_count > 0:
+                    added_examples = [c['content'][:50] for c in text_changes if c["type"] == "added"][:2]
+                    if added_examples:
+                        description_parts.append(f"Added examples: {' | '.join(added_examples)}")
+                
+                if removed_count > 0:
+                    removed_examples = [c['content'][:50] for c in text_changes if c["type"] == "removed"][:2]
+                    if removed_examples:
+                        description_parts.append(f"Removed examples: {' | '.join(removed_examples)}")
+                
                 change_data = {
                     'type': 'text_change',
-                    'description': f'Text content changed - {len([c for c in text_changes if c["type"] == "added"])} additions, {len([c for c in text_changes if c["type"] == "removed"])} removals',
+                    'description': ' | '.join(description_parts),
                     'details': text_changes,
                     'before_after': {
                         'before': old_text[:1000],
                         'after': new_text[:1000]
                     },
+                    'company_related_count': len(company_related_changes),
                     'timestamp': new_content['timestamp']
                 }
                 
@@ -698,8 +985,9 @@ class WebChangeMonitor:
                         print(f"AI Analysis completed: {ai_analysis.get('analysis_summary', 'No summary')}")
                 
                 changes.append(change_data)
+                print(f"📝 TEXT CHANGES: {change_data['description']}")
         
-        # Compare links (with navigation filtering)
+        # Compare links (with navigation filtering) - FIXED
         old_links = {f"{link['href']}|{link['text']}": link for link in old_content.get('links', [])}
         new_links = {f"{link['href']}|{link['text']}": link for link in new_content.get('links', [])}
         
@@ -737,29 +1025,71 @@ class WebChangeMonitor:
                 
                 changes.append(change_data)
         
-        # Find removed links
+        # Find removed links - ENHANCED with detailed reporting - THIS WAS THE MAIN ISSUE
         removed_link_keys = set(old_links.keys()) - set(new_links.keys())
         if removed_link_keys:
             removed_link_details = []
+            potential_removed_companies = []
+            navigation_links_filtered = 0
+            
             for key in removed_link_keys:
                 link = old_links[key]
+                
                 # Filter out navigation links from removed links too
-                if not self.is_navigation_content(link['text']):
-                    removed_link_details.append({
-                        'url': link['href'],
-                        'text': link['text'],
-                        'title': link.get('title', ''),
-                        'aria_label': link.get('aria-label', ''),
-                        'data_id': link.get('data-id', '')
-                    })
+                if self.is_navigation_content(link['text']):
+                    navigation_links_filtered += 1
+                    print(f"🔍 Filtered removed navigation link: {link['text']}")
+                    continue
+                
+                # Try to extract company name from link text or URL
+                potential_company = self.extract_company_from_link(link)
+                if potential_company:
+                    potential_removed_companies.append(potential_company)
+                
+                removed_link_details.append({
+                    'url': link['href'],
+                    'text': link['text'],
+                    'title': link.get('title', ''),
+                    'aria_label': link.get('aria-label', ''),
+                    'data_id': link.get('data-id', ''),
+                    'potential_company': potential_company
+                })
             
             if removed_link_details:  # Only create change if we have non-navigation links
-                changes.append({
+                # Create enhanced description showing what was removed
+                description_parts = [f'{len(removed_link_details)} links removed']
+                
+                if potential_removed_companies:
+                    company_names = ', '.join(potential_removed_companies)
+                    description_parts.append(f"Potential companies: {company_names}")
+                
+                # Show examples of removed link text
+                example_texts = [link['text'][:50] for link in removed_link_details[:3] if link['text']]
+                if example_texts:
+                    description_parts.append(f"Examples: {', '.join(example_texts)}")
+                
+                if navigation_links_filtered > 0:
+                    description_parts.append(f"({navigation_links_filtered} navigation links filtered)")
+                
+                change_data = {
                     'type': 'removed_links',
-                    'description': f'{len(removed_link_details)} links removed',
+                    'description': ' | '.join(description_parts),
                     'details': removed_link_details,
+                    'potential_companies': potential_removed_companies,
+                    'navigation_filtered': navigation_links_filtered,
                     'timestamp': new_content['timestamp']
-                })
+                }
+                
+                # Add AI analysis for removed links
+                if self.ai_analyzer:
+                    print("🤖 Running AI analysis on removed links...")
+                    ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
+                    if ai_analysis:
+                        change_data['ai_analysis'] = ai_analysis
+                        print(f"AI Analysis completed: {ai_analysis.get('analysis_summary', 'No summary')}")
+                
+                changes.append(change_data)
+                print(f"🗑️ REMOVED LINKS: {change_data['description']}")
         
         # Compare images with enhanced tracking
         image_changes = self.compare_images(
@@ -823,7 +1153,7 @@ class WebChangeMonitor:
             changes.append(change_data)
             print(f"✅ NEW COMPANIES DETECTED: {company_names_str}")
         
-        # Find removed companies
+        # Find removed companies - THIS WAS ALSO MISSING PROPER HANDLING
         removed_company_names = set(old_companies.keys()) - set(new_companies.keys())
         if removed_company_names:
             removed_company_details = []
@@ -990,7 +1320,7 @@ class WebChangeMonitor:
 app = Flask(__name__)
 
 # Initialize monitor with API key
-monitor = WebChangeMonitor(api_key=os.environ["API_KEY"])
+monitor = WebChangeMonitor(api_key=os.environ.get("API_KEY"))
 
 @app.route('/')
 def index():
@@ -1043,7 +1373,8 @@ if __name__ == '__main__':
     print("- Image attribute change detection")
     print("- 🤖 AI-powered portfolio company detection")
     print("- DeepSeek AI integration for investment analysis")
-    print("- 🔍 Navigation content filtering (NEW)")
+    print("- 🔍 Navigation content filtering")
+    print("- ✅ FIXED: Removed content detection (images, links, text, companies)")
     print("- Automatic filtering of menu/nav changes")
     print("Starting Flask server...")
     print("Visit http://localhost:5000 to view the dashboard")

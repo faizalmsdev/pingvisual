@@ -1,0 +1,76 @@
+[
+  {
+    "type": "removed_links",
+    "description": "1 links removed | Potential companies: Ambagon Therapeutics | Examples: Visit Site",
+    "details": [
+      {
+        "url": "https://www.ambagontx.com/",
+        "text": "Visit Site",
+        "title": "Ambagon Therapeutics",
+        "aria_label": "",
+        "data_id": "",
+        "potential_company": "Ambagon Therapeutics"
+      }
+    ],
+    "potential_companies": [
+      "Ambagon Therapeutics"
+    ],
+    "navigation_filtered": 0,
+    "timestamp": "2025-08-06T11:50:12.004086",
+    "ai_analysis": {
+      "new_companies_detected": false,
+      "companies": [],
+      "added_company": null,
+      "removed_company": "Ambagon Therapeutics",
+      "modified_company": null,
+      "analysis_summary": "Detected removal of Ambagon Therapeutics portfolio link ('Visit Site' URL containing company name), but no evidence of new portfolio additions. This appears to be a portfolio removal rather than a website update given the direct company-specific URL removal."
+    },
+    "detected_at": "2025-08-06T11:50:57.835236"
+  },
+  {
+    "type": "removed_images",
+    "description": "1 images removed | Potential companies: Ambagon Therapeutics | Examples: Ambagon Therapeutics",
+    "details": [
+      {
+        "src": "/media/Our Portfolio Logos/Ambagon-Therapeutics-Web-Logo.png",
+        "alt": "Ambagon Therapeutics",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Ambagon Therapeutics'",
+        "potential_company": "Ambagon Therapeutics",
+        "all_attributes": {
+          "src": "/media/Our Portfolio Logos/Ambagon-Therapeutics-Web-Logo.png",
+          "alt": "Ambagon Therapeutics",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "sr-only"
+          ],
+          "id": "",
+          "width": "",
+          "height": "",
+          "loading": "",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:/media/Our Portfolio Logos/Ambagon-Therapeutics-Web-Logo.png | alt:Ambagon Therapeutics"
+        }
+      }
+    ],
+    "potential_companies": [
+      "Ambagon Therapeutics"
+    ],
+    "timestamp": "2025-08-06T11:50:42.760747",
+    "ai_analysis": {
+      "new_companies_detected": false,
+      "companies": [],
+      "added_company": null,
+      "removed_company": "Ambagon Therapeutics",
+      "modified_company": null,
+      "analysis_summary": "No new portfolio additions detected. Ambagon Therapeutics was removed from the portfolio section (image URL and alt text confirmation). The removal suggests the company may no longer be part of the portfolio. No evidence of new company additions in the provided changes."
+    },
+    "detected_at": "2025-08-06T11:50:57.835236"
+  }
+]
