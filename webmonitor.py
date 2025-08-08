@@ -168,6 +168,139 @@ class AIAnalyzer:
                 "analysis_summary": "Analysis failed due to system error",
                 "error": str(e)
             }
+
+    def advanced_html_comparison(self, old_html, new_html, url):
+        """NEW: Advanced analysis using direct HTML comparison"""
+        try:
+            prompt = f"""
+You are an expert investment analyst specializing in venture capital and portfolio companies. 
+
+I have two versions of a portfolio website HTML content - BEFORE and AFTER. Your task is to analyze these HTML versions and identify if any new companies have been added to or removed from the investment portfolio.
+
+Website URL: {url}
+
+=== BEFORE HTML (Previous Version) ===
+{old_html[:25000]}  
+
+=== AFTER HTML (Current Version) ===  
+{new_html[:25000]}
+
+Please analyze both HTML versions and identify:
+1. NEW companies that appear in the AFTER version but not in the BEFORE version
+2. REMOVED companies that appear in the BEFORE version but not in the AFTER version
+3. Focus on actual portfolio companies, not navigation, news, or general website content
+
+Look for company names in:
+- Image alt text and filenames
+- Headings (h1, h2, h3, etc.)
+- Company logos and portfolio sections
+- Link text pointing to company websites
+- Any structured data about investments
+
+Return your analysis as a JSON structure like this:
+
+{{
+  "analysis_summary": "Brief summary of changes found",
+  "companies_added": [
+    {{
+      "name": "Company Name",
+      "sector": "Industry if identifiable",
+      "evidence": "What evidence shows this is a new portfolio company",
+      "source": "Where found (image alt, heading, link, etc.)"
+    }}
+  ],
+  "companies_removed": [
+    {{
+      "name": "Company Name", 
+      "sector": "Industry if identifiable",
+      "evidence": "What evidence shows this company was removed",
+      "source": "Where it was found in the old version"
+    }}
+  ],
+  "total_companies_found_new": 0,
+  "total_companies_found_old": 0,
+  "changes_detected": true/false
+}}
+
+IMPORTANT: Return ONLY valid JSON, no markdown formatting or explanatory text.
+"""
+
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            data = {
+                "model": "tngtech/deepseek-r1t2-chimera:free",  # Using the model from your second script
+                "messages": [
+                    {
+                        "role": "user", 
+                        "content": prompt
+                    }
+                ],
+                "temperature": 0.1,
+                "max_tokens": 3000
+            }
+            
+            print("🤖 Running advanced HTML comparison analysis...")
+            response = requests.post(self.base_url, headers=headers, json=data, timeout=60)
+            
+            if response.status_code == 200:
+                result = response.json()
+                ai_response = result['choices'][0]['message']['content'].strip()
+                
+                # Clean up response format
+                if ai_response.startswith('```json'):
+                    start_marker = '```json'
+                    end_marker = '```'
+                    start_idx = ai_response.find(start_marker) + len(start_marker)
+                    end_idx = ai_response.find(end_marker, start_idx)
+                    if end_idx != -1:
+                        ai_response = ai_response[start_idx:end_idx].strip()
+                elif ai_response.startswith('```'):
+                    lines = ai_response.split('\n')
+                    ai_response = '\n'.join(lines[1:-1])
+                
+                try:
+                    parsed_json = json.loads(ai_response)
+                    print(f"✅ Advanced HTML analysis completed")
+                    return parsed_json
+                    
+                except json.JSONDecodeError as e:
+                    print(f"JSON parsing error in advanced analysis: {e}")
+                    return {
+                        "analysis_summary": "Advanced analysis completed but JSON parsing failed",
+                        "companies_added": [],
+                        "companies_removed": [],
+                        "total_companies_found_new": 0,
+                        "total_companies_found_old": 0,
+                        "changes_detected": False,
+                        "error": f"JSON parsing failed: {str(e)}",
+                        "raw_response": ai_response[:500]
+                    }
+            else:
+                print(f"Advanced HTML Analysis API Error: {response.status_code}")
+                return {
+                    "analysis_summary": f"API request failed with status {response.status_code}",
+                    "companies_added": [],
+                    "companies_removed": [],
+                    "total_companies_found_new": 0,
+                    "total_companies_found_old": 0,
+                    "changes_detected": False,
+                    "error": f"API Error: {response.status_code}"
+                }
+                
+        except Exception as e:
+            print(f"Error in advanced HTML analysis: {e}")
+            return {
+                "analysis_summary": "Advanced analysis failed due to system error",
+                "companies_added": [],
+                "companies_removed": [],
+                "total_companies_found_new": 0,
+                "total_companies_found_old": 0,
+                "changes_detected": False,
+                "error": str(e)
+            }
     
     def _prepare_context(self, change_data):
         """Prepare context string from change data for AI analysis"""
@@ -262,13 +395,16 @@ class AIAnalyzer:
         return "\n".join(context_parts) if context_parts else None
 
 class WebChangeMonitor:
-    def __init__(self, url="http://127.0.0.1:3001/caspianequity.html", api_key=None):
+    def __init__(self, url="http://127.0.0.1:3003/racap.html", api_key=None, advanced_mode=True):
         self.url = url
         self.previous_content = None
         self.current_content = None
+        self.previous_html = None  # NEW: Store raw HTML for advanced analysis
+        self.current_html = None   # NEW: Store raw HTML for advanced analysis
         self.changes = []
         self.running = False
         self.driver = None
+        self.advanced_mode = advanced_mode  # NEW: Advanced mode flag
         
         # Initialize AI analyzer if API key is provided
         self.ai_analyzer = AIAnalyzer(api_key) if api_key else None
@@ -284,6 +420,90 @@ class WebChangeMonitor:
         service = Service()
         self.driver = webdriver.Chrome(service=service, options=options)
     
+    def clean_html_content(self, html_content):
+        """NEW: Clean HTML content similar to the second script"""
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Remove unwanted elements
+            unwanted_tags = [
+                'head', 'script', 'style', 'nav', 'header', 'footer', 
+                'sidebar', 'advertisement', 'ads', 'cookie', 'popup'
+            ]
+            
+            for tag in unwanted_tags:
+                for element in soup.find_all(tag):
+                    element.decompose()
+            
+            # Remove elements with common unwanted classes/ids
+            unwanted_selectors = [
+                '[class*="nav"]', '[class*="header"]', '[class*="footer"]',
+                '[class*="sidebar"]', '[class*="menu"]', '[class*="ad"]',
+                '[id*="nav"]', '[id*="header"]', '[id*="footer"]',
+                '[id*="sidebar"]', '[id*="menu"]', '[id*="ad"]'
+            ]
+            
+            for selector in unwanted_selectors:
+                for element in soup.select(selector):
+                    element.decompose()
+            
+            # Try to find main content areas
+            main_content = None
+            main_selectors = [
+                'main', '[role="main"]', '.main', '#main',
+                '.content', '#content', '.article', '.post',
+                '.entry', '.body', '.page-content'
+            ]
+            
+            for selector in main_selectors:
+                main_content = soup.select_one(selector)
+                if main_content:
+                    break
+            
+            # If main content found, use only that
+            if main_content:
+                cleaned_html = str(main_content)
+            else:
+                # Fallback: remove body's unwanted children but keep text content
+                body = soup.find('body')
+                if body:
+                    cleaned_html = str(body)
+                else:
+                    cleaned_html = str(soup)
+            
+            # Remove extra whitespace and newlines
+            cleaned_html = re.sub(r'\s+', ' ', cleaned_html)
+            cleaned_html = re.sub(r'>\s+<', '><', cleaned_html)
+            
+            print(f"📄 HTML cleaned: {len(html_content)} → {len(cleaned_html)} characters")
+            return cleaned_html
+            
+        except Exception as e:
+            print(f"⚠️ Error cleaning HTML: {e}")
+            return html_content[:50000]  # Return truncated original if cleaning fails
+    
+    def scroll_to_bottom(self, driver):
+        """NEW: Scroll to bottom of page to load dynamic content"""
+        print("🔽 Scrolling the page...")
+        try:
+            last_height = driver.execute_script("return document.body.scrollHeight")
+            
+            for i in range(20):  # SCROLL_LIMIT
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(2)  # SCROLL_DELAY
+                new_height = driver.execute_script("return document.body.scrollHeight")
+                if new_height == last_height:
+                    print(f"🛑 Page fully loaded after {i+1} scrolls")
+                    break
+                last_height = new_height
+            
+            print("✅ Scroll complete.")
+            return True
+            
+        except Exception as e:
+            print(f"⚠️ Error during scrolling: {e}")
+            return False
+
     def is_navigation_content(self, text):
         """Check if the text content is likely navigation/menu content"""
         if not text:
@@ -399,7 +619,7 @@ class WebChangeMonitor:
         return img_info
     
     def scrape_page(self):
-        """Enhanced scrape_page method to better preserve structure and filter navigation"""
+        """Enhanced scrape_page method with advanced mode support"""
         try:
             if not self.driver:
                 self.setup_driver()
@@ -407,7 +627,17 @@ class WebChangeMonitor:
             self.driver.get(self.url)
             time.sleep(5)  # Wait for page to load
             
+            # NEW: Scroll page for advanced mode
+            if self.advanced_mode:
+                self.scroll_to_bottom(self.driver)
+            
             html_content = self.driver.page_source
+            
+            # NEW: Store raw HTML for advanced analysis
+            if self.advanced_mode:
+                cleaned_html = self.clean_html_content(html_content)
+                # Store both raw and cleaned HTML
+                self.current_html = cleaned_html
             
             # Parse with BeautifulSoup to extract body content only
             soup = BeautifulSoup(html_content, 'html.parser')
@@ -549,6 +779,10 @@ class WebChangeMonitor:
                 company_names = [block['company_name'] for block in portfolio_blocks]
                 print(f"📊 Portfolio companies found: {', '.join(company_names)}")
             
+            # NEW: Advanced mode logging
+            if self.advanced_mode:
+                print(f"🔬 Advanced mode: Cleaned HTML stored ({len(self.current_html)} chars)")
+            
             return content_data
             
         except Exception as e:
@@ -634,7 +868,7 @@ class WebChangeMonitor:
                 }
                 
                 # Add AI analysis for new images
-                if self.ai_analyzer:
+                if self.ai_analyzer and not self.advanced_mode:  # Regular analysis
                     print("🤖 Running AI analysis on new images...")
                     ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
                     if ai_analysis:
@@ -710,7 +944,7 @@ class WebChangeMonitor:
                 }
                 
                 # Add AI analysis for removed images
-                if self.ai_analyzer:
+                if self.ai_analyzer and not self.advanced_mode:  # Regular analysis
                     print("🤖 Running AI analysis on removed images...")
                     ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
                     if ai_analysis:
@@ -851,11 +1085,47 @@ class WebChangeMonitor:
         return potential_company
     
     def compare_content(self, old_content, new_content):
-        """Compare two content snapshots and find differences - FIXED VERSION"""
+        """Compare two content snapshots and find differences - ENHANCED WITH ADVANCED MODE"""
         if not old_content or not new_content:
             return []
             
         changes = []
+        
+        # NEW: Advanced mode HTML comparison
+        if self.advanced_mode and self.ai_analyzer and self.previous_html and self.current_html:
+            print("🔬 Running advanced HTML comparison analysis...")
+            advanced_analysis = self.ai_analyzer.advanced_html_comparison(
+                self.previous_html, 
+                self.current_html, 
+                self.url
+            )
+            
+            if advanced_analysis and advanced_analysis.get('changes_detected'):
+                # Create change entry for advanced analysis
+                change_data = {
+                    'type': 'advanced_html_analysis',
+                    'description': f"Advanced AI Analysis: {advanced_analysis.get('analysis_summary', 'Analysis completed')}",
+                    'details': advanced_analysis,
+                    'companies_added': advanced_analysis.get('companies_added', []),
+                    'companies_removed': advanced_analysis.get('companies_removed', []),
+                    'total_added': len(advanced_analysis.get('companies_added', [])),
+                    'total_removed': len(advanced_analysis.get('companies_removed', [])),
+                    'timestamp': new_content['timestamp']
+                }
+                
+                changes.append(change_data)
+                
+                # Enhanced logging for advanced mode
+                if change_data['companies_added']:
+                    added_names = [c['name'] for c in change_data['companies_added']]
+                    print(f"✅ ADVANCED: New companies detected - {', '.join(added_names)}")
+                
+                if change_data['companies_removed']:
+                    removed_names = [c['name'] for c in change_data['companies_removed']]
+                    print(f"🗑️ ADVANCED: Removed companies detected - {', '.join(removed_names)}")
+            
+            # Store current HTML as previous for next comparison
+            self.previous_html = self.current_html
         
         # Compare text content with detailed before/after tracking
         old_text = old_content.get('text', '').strip()
@@ -976,8 +1246,8 @@ class WebChangeMonitor:
                     'timestamp': new_content['timestamp']
                 }
                 
-                # Add AI analysis for text changes
-                if self.ai_analyzer:
+                # Add AI analysis for text changes (only in regular mode)
+                if self.ai_analyzer and not self.advanced_mode:
                     print("🤖 Running AI analysis on text changes...")
                     ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
                     if ai_analysis:
@@ -987,7 +1257,7 @@ class WebChangeMonitor:
                 changes.append(change_data)
                 print(f"📝 TEXT CHANGES: {change_data['description']}")
         
-        # Compare links (with navigation filtering) - FIXED
+        # Compare links (with navigation filtering)
         old_links = {f"{link['href']}|{link['text']}": link for link in old_content.get('links', [])}
         new_links = {f"{link['href']}|{link['text']}": link for link in new_content.get('links', [])}
         
@@ -1015,8 +1285,8 @@ class WebChangeMonitor:
                     'timestamp': new_content['timestamp']
                 }
                 
-                # Add AI analysis for new links
-                if self.ai_analyzer:
+                # Add AI analysis for new links (only in regular mode)
+                if self.ai_analyzer and not self.advanced_mode:
                     print("🤖 Running AI analysis on new links...")
                     ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
                     if ai_analysis:
@@ -1025,7 +1295,7 @@ class WebChangeMonitor:
                 
                 changes.append(change_data)
         
-        # Find removed links - ENHANCED with detailed reporting - THIS WAS THE MAIN ISSUE
+        # Find removed links - ENHANCED with detailed reporting
         removed_link_keys = set(old_links.keys()) - set(new_links.keys())
         if removed_link_keys:
             removed_link_details = []
@@ -1080,8 +1350,8 @@ class WebChangeMonitor:
                     'timestamp': new_content['timestamp']
                 }
                 
-                # Add AI analysis for removed links
-                if self.ai_analyzer:
+                # Add AI analysis for removed links (only in regular mode)
+                if self.ai_analyzer and not self.advanced_mode:
                     print("🤖 Running AI analysis on removed links...")
                     ai_analysis = self.ai_analyzer.analyze_portfolio_changes(change_data)
                     if ai_analysis:
@@ -1098,12 +1368,13 @@ class WebChangeMonitor:
         )
         changes.extend(image_changes)
         
-        # Compare portfolio blocks specifically
-        portfolio_changes = self.compare_portfolio_blocks(
-            old_content.get('portfolio_blocks', []),
-            new_content.get('portfolio_blocks', [])
-        )
-        changes.extend(portfolio_changes)
+        # Compare portfolio blocks specifically (only in regular mode)
+        if not self.advanced_mode:
+            portfolio_changes = self.compare_portfolio_blocks(
+                old_content.get('portfolio_blocks', []),
+                new_content.get('portfolio_blocks', [])
+            )
+            changes.extend(portfolio_changes)
         
         return changes
 
