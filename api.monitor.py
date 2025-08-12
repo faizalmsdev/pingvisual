@@ -485,18 +485,41 @@ user_manager = UserManager()
 job_manager = JobManager()
 API_KEY = os.getenv('API_KEY')  # Load from environment
 
-# Authentication decorator
+# Authentication decorator - supports both session and token auth
 def require_auth(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return jsonify({'error': 'Authentication required'}), 401
+        user_id = None
         
-        user = user_manager.get_user(session['user_id'])
+        # Method 1: Check session (existing cookie-based auth)
+        if 'user_id' in session:
+            user_id = session['user_id']
+        
+        # Method 2: Check Authorization header (Bearer token)
+        elif 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            if auth_header.startswith('Bearer '):
+                user_id = auth_header[7:]  # Remove 'Bearer ' prefix
+        
+        # Method 3: Check X-User-Token header
+        elif 'X-User-Token' in request.headers:
+            user_id = request.headers['X-User-Token']
+        
+        # Method 4: Check query parameter
+        elif 'token' in request.args:
+            user_id = request.args['token']
+        
+        if not user_id:
+            return jsonify({'error': 'Authentication required. Use session, Bearer token, X-User-Token header, or token query parameter'}), 401
+        
+        user = user_manager.get_user(user_id)
         if not user or not user.is_active:
-            session.pop('user_id', None)
-            return jsonify({'error': 'Invalid session'}), 401
+            if 'user_id' in session:
+                session.pop('user_id', None)
+            return jsonify({'error': 'Invalid authentication credentials'}), 401
         
+        # Store current user for use in route handlers
+        request.current_user_id = user_id
         return f(*args, **kwargs)
     return decorated_function
 
@@ -536,7 +559,8 @@ def register():
                 'user_id': user.user_id,
                 'email': user.email,
                 'created_at': user.created_at
-            }
+            },
+            'token': user.user_id  # Include user_id as token for API access
         }), 201
         
     except Exception as e:
@@ -569,7 +593,8 @@ def login():
                 'user_id': user.user_id,
                 'email': user.email,
                 'last_login': user.last_login
-            }
+            },
+            'token': user.user_id  # Include user_id as token for API access
         })
         
     except Exception as e:
@@ -593,7 +618,8 @@ def logout():
 def get_profile():
     """Get user profile"""
     try:
-        user = user_manager.get_user(session['user_id'])
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        user = user_manager.get_user(user_id)
         user_jobs = job_manager.get_user_jobs(user.user_id)
         
         return jsonify({
@@ -633,7 +659,8 @@ def create_job():
             return jsonify({'error': 'check_interval_minutes must be at least 1'}), 400
         
         # Create job for authenticated user
-        job_id = job_manager.create_job(session['user_id'], name, url, check_interval)
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        job_id = job_manager.create_job(user_id, name, url, check_interval)
         job = job_manager.get_job(job_id)
         
         return jsonify({
@@ -651,7 +678,8 @@ def create_job():
 def get_user_jobs():
     """Get all monitoring jobs for authenticated user"""
     try:
-        jobs = job_manager.get_user_jobs(session['user_id'])
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        jobs = job_manager.get_user_jobs(user_id)
         return jsonify({
             'success': True,
             'jobs': [asdict(job) for job in jobs],
@@ -665,7 +693,8 @@ def get_user_jobs():
 def get_job(job_id):
     """Get specific job details"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         job = job_manager.get_job(job_id)
@@ -681,7 +710,8 @@ def get_job(job_id):
 def start_job(job_id):
     """Start monitoring for a specific job"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         # Get API key from request or use default
@@ -706,7 +736,8 @@ def start_job(job_id):
 def stop_job(job_id):
     """Stop monitoring for a specific job"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         success = job_manager.stop_job(job_id)
@@ -727,7 +758,8 @@ def stop_job(job_id):
 def pause_job(job_id):
     """Pause monitoring for a specific job"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         success = job_manager.pause_job(job_id)
@@ -748,7 +780,8 @@ def pause_job(job_id):
 def delete_job(job_id):
     """Delete a job and its results"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         job = job_manager.get_job(job_id)
@@ -767,7 +800,8 @@ def delete_job(job_id):
 def get_job_results(job_id):
     """Get results for a specific job"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         job = job_manager.get_job(job_id)
@@ -792,7 +826,8 @@ def get_job_results(job_id):
 def get_job_stats(job_id):
     """Get statistics for a specific job"""
     try:
-        if not job_manager.user_owns_job(session['user_id'], job_id):
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        if not job_manager.user_owns_job(user_id, job_id):
             return jsonify({'error': 'Job not found or access denied'}), 404
         
         job = job_manager.get_job(job_id)
@@ -812,7 +847,8 @@ def get_job_stats(job_id):
 def get_user_status():
     """Get user-specific system status"""
     try:
-        user_jobs = job_manager.get_user_jobs(session['user_id'])
+        user_id = getattr(request, 'current_user_id', session.get('user_id'))
+        user_jobs = job_manager.get_user_jobs(user_id)
         
         status = {
             'total_jobs': len(user_jobs),
@@ -911,15 +947,35 @@ if __name__ == '__main__':
     print("                    -H 'Content-Type: application/json' \\")
     print("                    -d '{\"email\":\"user@example.com\",\"password\":\"password123\"}'")
     print("")
-    print("  2. Login: curl -X POST http://localhost:5000/api/auth/login \\")
+    print("  2. Login (Session/Cookie): curl -X POST http://localhost:5000/api/auth/login \\")
     print("                 -H 'Content-Type: application/json' \\")
     print("                 -d '{\"email\":\"user@example.com\",\"password\":\"password123\"}' \\")
     print("                 -c cookies.txt")
     print("")
-    print("  3. Create Job: curl -X POST http://localhost:5000/api/jobs \\")
+    print("  3a. Use with Session (Cookie): curl -X POST http://localhost:5000/api/jobs \\")
     print("                      -H 'Content-Type: application/json' \\")
     print("                      -b cookies.txt \\")
     print("                      -d '{\"name\":\"My Website\",\"url\":\"https://example.com\",\"check_interval_minutes\":5}'")
+    print("")
+    print("  3b. Use with Token (Header): curl -X POST http://localhost:5000/api/jobs \\")
+    print("                      -H 'Content-Type: application/json' \\")
+    print("                      -H 'Authorization: Bearer YOUR_USER_ID' \\")
+    print("                      -d '{\"name\":\"My Website\",\"url\":\"https://example.com\",\"check_interval_minutes\":5}'")
+    print("")
+    print("  3c. Use with Token (Header): curl -X POST http://localhost:5000/api/jobs \\")
+    print("                      -H 'Content-Type: application/json' \\")
+    print("                      -H 'X-User-Token: YOUR_USER_ID' \\")
+    print("                      -d '{\"name\":\"My Website\",\"url\":\"https://example.com\",\"check_interval_minutes\":5}'")
+    print("")
+    print("  3d. Use with Token (Query): curl -X POST 'http://localhost:5000/api/jobs?token=YOUR_USER_ID' \\")
+    print("                      -H 'Content-Type: application/json' \\")
+    print("                      -d '{\"name\":\"My Website\",\"url\":\"https://example.com\",\"check_interval_minutes\":5}'")
+    print("")
+    print("🔐 Authentication Methods:")
+    print("  - Session cookies (after login)")
+    print("  - Bearer token: Authorization: Bearer YOUR_USER_ID")
+    print("  - Custom header: X-User-Token: YOUR_USER_ID")
+    print("  - Query parameter: ?token=YOUR_USER_ID")
     print("")
     print(f"🤖 AI Analysis: {'Enabled' if API_KEY else 'Disabled (set API_KEY environment variable)'}")
     print(f"💾 Data Storage:")
