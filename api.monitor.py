@@ -988,7 +988,7 @@ if __name__ == '__main__':
     print("   Press Ctrl+C to stop")
     
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000, threaded=True,ssl_context=('flask-selfsigned.crt', 'flask-selfsigned.key'))
+        app.run(debug=True, host='0.0.0.0', port=5000, threaded=True, ssl_context=('/etc/ssl/pingvisual/flask-selfsigned.crt', '/etc/ssl/pingvisual/flask-selfsigned.key'))
     except KeyboardInterrupt:
         print("\n🛑 Shutting down...")
         # Stop all running jobs
