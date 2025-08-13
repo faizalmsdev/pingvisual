@@ -1,0 +1,874 @@
+[
+  {
+    "type": "new_images",
+    "description": "32 new images found",
+    "details": [
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/WYSH.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/WYSH.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "95",
+          "height": "26",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/WYSH.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Shopalyst-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Shopalyst-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "128",
+          "height": "17",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Shopalyst-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Winzo_Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Winzo_Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "105",
+          "height": "23",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Winzo_Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Mettl-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Mettl-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "76",
+          "height": "40",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Mettl-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/1-1-removebg-preview-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/1-1-removebg-preview-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "81",
+          "height": "38",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/1-1-removebg-preview-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Koo_C.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Koo_C.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "98",
+          "height": "62",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Koo_C.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-275.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-275.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "140",
+          "height": "70",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-275.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/attero.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/attero.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "147",
+          "height": "29",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/attero.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-276.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-276.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "163",
+          "height": "41",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-276.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Mask-Group-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Mask-Group-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "84",
+          "height": "42",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Mask-Group-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Via-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Via-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "69",
+          "height": "32",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Via-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-269.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-269.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "114",
+          "height": "62",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-269.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/ll-removebg-preview-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/ll-removebg-preview-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "115",
+          "height": "24",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/ll-removebg-preview-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Mall91_Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Mall91_Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "62",
+          "height": "91",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Mall91_Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/MyGlamm-Logo_1-removebg-preview-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/MyGlamm-Logo_1-removebg-preview-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "169",
+          "height": "48",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/MyGlamm-Logo_1-removebg-preview-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-274.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-274.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "143",
+          "height": "33",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-274.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Logo_Header-1-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Logo_Header-1-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "158",
+          "height": "62",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Logo_Header-1-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Signzy-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Signzy-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "110",
+          "height": "34",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Signzy-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/1_s-abvssiCwSG1WusLW9MjA-removebg-preview-1.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/1_s-abvssiCwSG1WusLW9MjA-removebg-preview-1.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "132",
+          "height": "24",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/1_s-abvssiCwSG1WusLW9MjA-removebg-preview-1.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-273.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-273.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "124",
+          "height": "34",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-273.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Medplus-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Medplus-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "93",
+          "height": "34",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Medplus-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Yourstory-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Yourstory-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "105",
+          "height": "36",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Yourstory-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Zivame-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Zivame-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "103",
+          "height": "31",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Zivame-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Unilog-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Unilog-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "109",
+          "height": "30",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Unilog-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-277.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-277.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "66",
+          "height": "66",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-277.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-262.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-262.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "100",
+          "height": "29",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-262.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Milkbasket_C.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Milkbasket_C.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "135",
+          "height": "86",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Milkbasket_C.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-3.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-3.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "57",
+          "height": "69",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-3.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/image-270.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/image-270.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "109",
+          "height": "57",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/image-270.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Myntra-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Myntra-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "126",
+          "height": "38",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Myntra-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Vogo-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Vogo-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "58",
+          "height": "58",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Vogo-Big.png"
+        }
+      },
+      {
+        "src": "//kalaari.com/wp-content/uploads/2021/09/Toffee-Big.png",
+        "alt": "",
+        "title": "",
+        "data_id": "",
+        "context": "No additional context",
+        "all_attributes": {
+          "src": "//kalaari.com/wp-content/uploads/2021/09/Toffee-Big.png",
+          "alt": "",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "tp-rs-img",
+            "rs-lazyload"
+          ],
+          "id": "",
+          "width": "93",
+          "height": "46",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src://kalaari.com/wp-content/uploads/2021/09/Toffee-Big.png"
+        }
+      }
+    ],
+    "timestamp": "2025-08-12T16:51:40.636215",
+    "detected_at": "2025-08-12T16:51:40.696484"
+  }
+]

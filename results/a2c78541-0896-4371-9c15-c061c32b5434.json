@@ -1,0 +1,109 @@
+[
+  {
+    "type": "text_change",
+    "description": "Text content changed - 1 additions, 1 removals | Potential companies involved: Some, Sign, Search, People, Something | Added examples: Don\u2019t miss what\u2019s happening People on X are the fi | Removed examples: Something went wrong, but don\u2019t fret \u2014 let\u2019s give ",
+    "details": [
+      {
+        "type": "removed",
+        "content": "Something went wrong, but don\u2019t fret \u2014 let\u2019s give it another shot. Try again Some privacy related extensions may cause issues on x.com. Please disable them and try again.",
+        "position": 0,
+        "potential_companies": [
+          "Please",
+          "Something",
+          "Some"
+        ],
+        "is_company_related": true
+      },
+      {
+        "type": "added",
+        "content": "Don\u2019t miss what\u2019s happening People on X are the first to know. Log in Sign up Hmm...this page doesn\u2019t exist. Try searching for something else. Search",
+        "position": 0,
+        "potential_companies": [
+          "Search",
+          "People",
+          "Sign"
+        ],
+        "is_company_related": true
+      }
+    ],
+    "before_after": {
+      "before": "Something went wrong, but don\u2019t fret \u2014 let\u2019s give it another shot. Try again Some privacy related extensions may cause issues on x.com. Please disable them and try again.",
+      "after": "Don\u2019t miss what\u2019s happening People on X are the first to know. Log in Sign up Hmm...this page doesn\u2019t exist. Try searching for something else. Search"
+    },
+    "company_related_count": 2,
+    "timestamp": "2025-08-12T16:51:53.990695",
+    "detected_at": "2025-08-12T16:51:54.277480"
+  },
+  {
+    "type": "new_links",
+    "description": "3 new links found",
+    "details": [
+      {
+        "url": "/login",
+        "text": "Log in",
+        "title": "",
+        "aria_label": "",
+        "data_id": ""
+      },
+      {
+        "url": "/search",
+        "text": "Search",
+        "title": "",
+        "aria_label": "",
+        "data_id": ""
+      },
+      {
+        "url": "/i/flow/signup",
+        "text": "Sign up",
+        "title": "",
+        "aria_label": "",
+        "data_id": ""
+      }
+    ],
+    "timestamp": "2025-08-12T16:51:53.990695",
+    "detected_at": "2025-08-12T16:51:54.277480"
+  },
+  {
+    "type": "removed_images",
+    "description": "1 images removed | Potential companies: 26A0 | Examples: \u26a0\ufe0f",
+    "details": [
+      {
+        "src": "https://abs-0.twimg.com/emoji/v2/svg/26a0.svg",
+        "alt": "\u26a0\ufe0f",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: '\u26a0\ufe0f'",
+        "potential_company": "26A0",
+        "all_attributes": {
+          "src": "https://abs-0.twimg.com/emoji/v2/svg/26a0.svg",
+          "alt": "\u26a0\ufe0f",
+          "title": "",
+          "data-id": "",
+          "data-src": "",
+          "data-original": "",
+          "class": [
+            "r-4qtqp9",
+            "r-dflpy8",
+            "r-k4bwe5",
+            "r-1kpi4qh",
+            "r-pp5qcn",
+            "r-h9hxbl"
+          ],
+          "id": "",
+          "width": "",
+          "height": "",
+          "loading": "",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://abs-0.twimg.com/emoji/v2/svg/26a0.svg | alt:\u26a0\ufe0f"
+        }
+      }
+    ],
+    "potential_companies": [
+      "26A0"
+    ],
+    "timestamp": "2025-08-12T16:51:54.142827",
+    "detected_at": "2025-08-12T16:51:54.277480"
+  }
+]

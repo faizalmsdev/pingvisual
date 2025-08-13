@@ -1,0 +1,657 @@
+[
+  {
+    "type": "new_images",
+    "description": "12 new images found",
+    "details": [
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/12/Airwoot-1.png",
+        "alt": "Airwoot 1 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Airwoot 1 - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2022/12/Airwoot-1.png",
+          "alt": "Airwoot 1 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2022/12/Airwoot-1.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-10534",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "170",
+          "height": "170",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/12/Airwoot-1.png | alt:Airwoot 1 - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/11/Onwo.png",
+        "alt": "Onwo - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Onwo - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2022/11/Onwo.png",
+          "alt": "Onwo - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2022/11/Onwo.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9571",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/11/Onwo.png | alt:Onwo - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/Nua.png",
+        "alt": "Nua - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Nua - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/Nua.png",
+          "alt": "Nua - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/Nua.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9162",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/Nua.png | alt:Nua - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/04/LoanTap.png",
+        "alt": "LoanTap - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'LoanTap - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/04/LoanTap.png",
+          "alt": "LoanTap - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/04/LoanTap.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9158",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/04/LoanTap.png | alt:LoanTap - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/12/fp.png",
+        "alt": "fp - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'fp - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2022/12/fp.png",
+          "alt": "fp - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2022/12/fp.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-10531",
+            "lazyloading"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/12/fp.png | alt:fp - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/04/Innovcare.png",
+        "alt": "Innovcare - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Innovcare - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/04/Innovcare.png",
+          "alt": "Innovcare - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/04/Innovcare.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9155",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/04/Innovcare.png | alt:Innovcare - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002156.svg",
+        "alt": "Wysa Logo",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Wysa Logo'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002156.svg",
+          "alt": "Wysa Logo",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002156.svg",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-12569",
+            "lazyloading"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002156.svg | alt:Wysa Logo"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002154.svg",
+        "alt": "Zetwerk",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Zetwerk'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002154.svg",
+          "alt": "Zetwerk",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002154.svg",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-12565",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/Frame-1000002154.svg | alt:Zetwerk"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/12/fynd.png",
+        "alt": "fynd - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'fynd - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2022/12/fynd.png",
+          "alt": "fynd - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2022/12/fynd.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-10530",
+            "lazyloading"
+          ],
+          "id": "",
+          "width": "342",
+          "height": "322",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/12/fynd.png | alt:fynd - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/Zyla-2.png",
+        "alt": "Zyla 2 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Zyla 2 - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/Zyla-2.png",
+          "alt": "Zyla 2 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/Zyla-2.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9217",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/Zyla-2.png | alt:Zyla 2 - Kae Capital"
+        }
+      },
+      {
+        "src": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20800%20593%22%3E%3C/svg%3E",
+        "alt": "Hst 4 Photoroom 1 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Hst 4 Photoroom 1 - Kae Capital'",
+        "all_attributes": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20800%20593%22%3E%3C/svg%3E",
+          "alt": "Hst 4 Photoroom 1 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2024/07/Hst-4-Photoroom-1.svg",
+          "data-original": "",
+          "class": [
+            "lazyload",
+            "attachment-large",
+            "size-large",
+            "wp-image-12561"
+          ],
+          "id": "",
+          "width": "800",
+          "height": "593",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20800%20593%22%3E%3C/svg%3E | alt:Hst 4 Photoroom 1 - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/parentune-logo.png",
+        "alt": "parentune logo - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'parentune logo - Kae Capital'",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/parentune-logo.png",
+          "alt": "parentune logo - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/parentune-logo.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-11232",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/parentune-logo.png | alt:parentune logo - Kae Capital"
+        }
+      }
+    ],
+    "timestamp": "2025-08-12T16:50:28.879808",
+    "detected_at": "2025-08-12T16:50:28.899907"
+  },
+  {
+    "type": "removed_images",
+    "description": "6 images removed | Potential companies: Hiver 1 - Kae Capital, Hippo Video - Kae Capital, Hst 4 Photoroom 1 - Kae Capital, Health Kart 2 - Kae Capital, Tranzact - Kae Capital | Examples: Hiver 1 - Kae Capital, 6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g - Kae Capital, Hippo Video - Kae Capital",
+    "details": [
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/04/Hiver-1.png",
+        "alt": "Hiver 1 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Hiver 1 - Kae Capital'",
+        "potential_company": "Hiver 1 - Kae Capital",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/04/Hiver-1.png",
+          "alt": "Hiver 1 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/04/Hiver-1.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9150",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/04/Hiver-1.png | alt:Hiver 1 - Kae Capital"
+        }
+      },
+      {
+        "src": "https://secure.gravatar.com/avatar/6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g",
+        "alt": "6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: '6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g - Kae Capital'",
+        "potential_company": null,
+        "all_attributes": {
+          "src": "https://secure.gravatar.com/avatar/6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g",
+          "alt": "6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://secure.gravatar.com/avatar/6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g",
+          "data-original": "",
+          "class": [
+            "avatar",
+            "avatar-60",
+            "photo",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "60",
+          "height": "60",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://secure.gravatar.com/avatar/6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b78080055dc53c0f4da012?s=60&d=mm&r=g | alt:6ea307b7d583ee9d5dec3ebfa5dcffdbc3dce49446b7808005"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/04/Hippo-Video.png",
+        "alt": "Hippo Video - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Hippo Video - Kae Capital'",
+        "potential_company": "Hippo Video - Kae Capital",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/04/Hippo-Video.png",
+          "alt": "Hippo Video - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/04/Hippo-Video.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9149",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/04/Hippo-Video.png | alt:Hippo Video - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2024/07/Hst-4-Photoroom-1.svg",
+        "alt": "Hst 4 Photoroom 1 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Hst 4 Photoroom 1 - Kae Capital'",
+        "potential_company": "Hst 4 Photoroom 1 - Kae Capital",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2024/07/Hst-4-Photoroom-1.svg",
+          "alt": "Hst 4 Photoroom 1 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2024/07/Hst-4-Photoroom-1.svg",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-12561",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "800",
+          "height": "593",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2024/07/Hst-4-Photoroom-1.svg | alt:Hst 4 Photoroom 1 - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/04/Health-Kart-2.png",
+        "alt": "Health Kart 2 - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Health Kart 2 - Kae Capital'",
+        "potential_company": "Health Kart 2 - Kae Capital",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/04/Health-Kart-2.png",
+          "alt": "Health Kart 2 - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/04/Health-Kart-2.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9148",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/04/Health-Kart-2.png | alt:Health Kart 2 - Kae Capital"
+        }
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2020/03/Tranzact.png",
+        "alt": "Tranzact - Kae Capital",
+        "title": "",
+        "data_id": "",
+        "context": "Alt: 'Tranzact - Kae Capital'",
+        "potential_company": "Tranzact - Kae Capital",
+        "all_attributes": {
+          "src": "https://kae-capital.com/wp-content/uploads/2020/03/Tranzact.png",
+          "alt": "Tranzact - Kae Capital",
+          "title": "",
+          "data-id": "",
+          "data-src": "https://kae-capital.com/wp-content/uploads/2020/03/Tranzact.png",
+          "data-original": "",
+          "class": [
+            "attachment-large",
+            "size-large",
+            "wp-image-9167",
+            "lazyloaded"
+          ],
+          "id": "",
+          "width": "270",
+          "height": "200",
+          "loading": "lazy",
+          "data-caption": "",
+          "aria-label": "",
+          "aria-describedby": "",
+          "unique_id": "src:https://kae-capital.com/wp-content/uploads/2020/03/Tranzact.png | alt:Tranzact - Kae Capital"
+        }
+      }
+    ],
+    "potential_companies": [
+      "Hiver 1 - Kae Capital",
+      "Hippo Video - Kae Capital",
+      "Hst 4 Photoroom 1 - Kae Capital",
+      "Health Kart 2 - Kae Capital",
+      "Tranzact - Kae Capital"
+    ],
+    "timestamp": "2025-08-12T16:50:28.881819",
+    "detected_at": "2025-08-12T16:50:28.899907"
+  },
+  {
+    "type": "modified_images",
+    "description": "4 images modified | Changed attributes: class",
+    "details": [
+      {
+        "src": "https://secure.gravatar.com/avatar/a03e001bc11902ea9debe4e4fd0c9c90c4cbcb79e063aad00e2014d15bbb3537?s=60&d=mm&r=g",
+        "unique_id": "src:https://secure.gravatar.com/avatar/a03e001bc11902ea9debe4e4fd0c9c90c4cbcb79e063aad00e2014d15bbb3537?s=60&d=mm&r=g | alt:a03e001bc11902ea9debe4e4fd0c9c90c4cbcb79e063aad00e",
+        "changes": [
+          {
+            "attribute": "class",
+            "old_value": [
+              "avatar",
+              "avatar-60",
+              "photo",
+              "lazyloaded"
+            ],
+            "new_value": [
+              "avatar",
+              "avatar-60",
+              "photo",
+              "ls-is-cached",
+              "lazyloaded"
+            ]
+          }
+        ],
+        "old_context": "Alt: 'a03e001bc11902ea9debe4e4fd0c9c90c4cbcb79e063aad00e2014d15bbb3537?s=60&d=mm&r=g - Kae Capital' | Class: '['avatar', 'avatar-60', 'photo', 'lazyloaded']'",
+        "new_context": "Alt: 'a03e001bc11902ea9debe4e4fd0c9c90c4cbcb79e063aad00e2014d15bbb3537?s=60&d=mm&r=g - Kae Capital' | Class: '['avatar', 'avatar-60', 'photo', 'ls-is-cached', 'lazyloaded']'"
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/12/nu.png",
+        "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/12/nu.png | alt:nu - Kae Capital",
+        "changes": [
+          {
+            "attribute": "class",
+            "old_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-10528",
+              "lazyloading"
+            ],
+            "new_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-10528",
+              "ls-is-cached",
+              "lazyloaded"
+            ]
+          }
+        ],
+        "old_context": "Alt: 'nu - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-10528', 'lazyloading']'",
+        "new_context": "Alt: 'nu - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-10528', 'ls-is-cached', 'lazyloaded']'"
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/11/certa.png",
+        "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/11/certa.png | alt:certa - Kae Capital",
+        "changes": [
+          {
+            "attribute": "class",
+            "old_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-9465",
+              "lazyloaded"
+            ],
+            "new_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-9465",
+              "ls-is-cached",
+              "lazyloaded"
+            ]
+          }
+        ],
+        "old_context": "Alt: 'certa - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-9465', 'lazyloaded']'",
+        "new_context": "Alt: 'certa - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-9465', 'ls-is-cached', 'lazyloaded']'"
+      },
+      {
+        "src": "https://kae-capital.com/wp-content/uploads/2022/12/Halaplay_new.png",
+        "unique_id": "src:https://kae-capital.com/wp-content/uploads/2022/12/Halaplay_new.png | alt:Halaplay new - Kae Capital",
+        "changes": [
+          {
+            "attribute": "class",
+            "old_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-10529",
+              "lazyloaded"
+            ],
+            "new_value": [
+              "attachment-large",
+              "size-large",
+              "wp-image-10529",
+              "ls-is-cached",
+              "lazyloaded"
+            ]
+          }
+        ],
+        "old_context": "Alt: 'Halaplay new - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-10529', 'lazyloaded']'",
+        "new_context": "Alt: 'Halaplay new - Kae Capital' | Class: '['attachment-large', 'size-large', 'wp-image-10529', 'ls-is-cached', 'lazyloaded']'"
+      }
+    ],
+    "timestamp": "2025-08-12T16:50:28.897899",
+    "detected_at": "2025-08-12T16:50:28.899907"
+  }
+]
