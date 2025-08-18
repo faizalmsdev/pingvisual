@@ -395,7 +395,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting or explanatory text.
         return "\n".join(context_parts) if context_parts else None
 
 class WebChangeMonitor:
-    def __init__(self, url="http://127.0.0.1:3003/racap.html", api_key=None, advanced_mode=True):
+    def __init__(self, url="http://127.0.0.1:3003/racap.html", api_key=None, advanced_mode=False):
         self.url = url
         self.previous_content = None
         self.current_content = None
