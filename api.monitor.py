@@ -914,12 +914,24 @@ def api_latest_change():
     Query param: per_job=1 to get latest for each job.
     """
     per_job = request.args.get('per_job')
+    # Load jobs.json to get changes_detected count for each job
+    jobs_file = "jobs.json"
+    jobs_with_changes = set()
+    if os.path.exists(jobs_file):
+        with open(jobs_file, 'r', encoding='utf-8') as f:
+            jobs_data = json.load(f)
+            for job in jobs_data:
+                if job.get('changes_detected', 0) > 0:
+                    jobs_with_changes.add(job['job_id'])
+
     if per_job:
         changes = get_latest_changes_per_job()
-        return jsonify({'success': True, 'latest_changes': changes})
+        # Only include jobs with changes_detected > 0
+        filtered = [c for c in changes if c['job_id'] in jobs_with_changes]
+        return jsonify({'success': True, 'latest_changes': filtered})
     else:
         change = get_latest_change()
-        if change:
+        if change and change['job_id'] in jobs_with_changes:
             return jsonify({'success': True, 'latest_change': change})
         else:
             return jsonify({'success': False, 'message': 'No changes found'}), 404
