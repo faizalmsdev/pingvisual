@@ -988,17 +988,7 @@ if __name__ == '__main__':
     print("   Press Ctrl+C to stop")
     
     try:
-        # Check if SSL certificates exist, otherwise run without SSL
-        ssl_cert_path = '/etc/ssl/pingvisual/flask-selfsigned.crt'
-        ssl_key_path = '/etc/ssl/pingvisual/flask-selfsigned.key'
-        
-        if os.path.exists(ssl_cert_path) and os.path.exists(ssl_key_path):
-            print("🔒 SSL certificates found, starting with HTTPS")
-            app.run(debug=True, host='0.0.0.0', port=5000, threaded=True, ssl_context=(ssl_cert_path, ssl_key_path))
-        else:
-            print("⚠️  SSL certificates not found, starting with HTTP only")
-            print("   For production, set up SSL certificates")
-            app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
+        app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
     except KeyboardInterrupt:
         print("\n🛑 Shutting down...")
         # Stop all running jobs
