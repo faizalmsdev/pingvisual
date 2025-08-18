@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+from latest_changes import get_latest_change, get_latest_changes_per_job
 from flask_cors import CORS
 import json
 import os
@@ -905,6 +906,23 @@ def get_admin_stats():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/changes/latest', methods=['GET'])
+def api_latest_change():
+    """
+    Returns the latest change detected across all jobs (most recent change in results/).
+    Query param: per_job=1 to get latest for each job.
+    """
+    per_job = request.args.get('per_job')
+    if per_job:
+        changes = get_latest_changes_per_job()
+        return jsonify({'success': True, 'latest_changes': changes})
+    else:
+        change = get_latest_change()
+        if change:
+            return jsonify({'success': True, 'latest_change': change})
+        else:
+            return jsonify({'success': False, 'message': 'No changes found'}), 404
 
 if __name__ == '__main__':
     print("🔐 Web Change Monitor API with Authentication")
